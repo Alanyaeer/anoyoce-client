@@ -1,0 +1,68 @@
+.el-table .warning-row td{
+    background:#F8ECDA !important;
+    color:red
+}
+.el-table .delete-row td{
+    background:var(--el-color-info-dark-2) !important;
+    color:rgb(248, 247, 247)
+}
+.el-table .manager-row td{
+    background: var(--el-color-danger-light-7) !important;
+}
+.el-table .title-row td {
+    background: var(--el-color-warning-light-7) !important;
+}
+.el-table .pass-row td {
+    background: var(--el-color-success-light-7) !important;
+}
+.el-table .pending-row td {
+    background: var(#eebe77) !important;
+}
+:deep(.ql-editor) {
+    min-height: 180px;  
+
+  }
+  :deep(.ql-formats) {
+    height: 21px;
+    line-height: 21px;
+  }
+.ql-editor{
+    max-height: 550px
+}
+.el-popper.is-customized {
+    /* Set padding to ensure the height is 32px */
+    padding: 6px 12px;
+    background: linear-gradient(90deg, #7e8ac5, #c3cbe4);
+  }
+  
+  .el-popper.is-customized .el-popper__arrow::before {
+    background: linear-gradient(45deg, #7e8ac5, #909bd1);
+    right: 0;
+  }
+.score-easy{
+    color: #00AF9B;
+}
+.score-middle{
+    color: #FFC08C;
+}
+.score-hard{
+    color: #FF2D55;
+}
+body::-webkit-scrollbar-thumb {
+    border-radius: 10px;    
+    background-color: #c7c7c7;
+}
+::v-deep .el-table{
+    font-weight: 400;
+}
+::v-deep .arco-collapse-item-content{
+    background-color: white;
+}
+.hljs {
+    background-color: #f0f0f0; /* 你想要的背景色 */
+}
+
+.arco-typography{
+    margin-bottom: 0em;
+}
+/* 改变滚动条轨道的样式 */
