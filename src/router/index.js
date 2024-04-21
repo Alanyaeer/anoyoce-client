@@ -10,6 +10,10 @@ const router = createRouter({
     {
       path: '/chat',
       component: () => import('@/views/chat/chatMainPage.vue')
+    },
+    {
+      path: '/test',
+      component:() => import('@/views/test/testPage.vue')
     }
   ]
 })
