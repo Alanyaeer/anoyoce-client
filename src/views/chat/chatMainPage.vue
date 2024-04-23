@@ -1,5 +1,6 @@
 <script setup>
-import dockComp from './child/dockComp.vue';
+import dockComp from '@/views/chat/child/dockComp.vue';
+
 </script>
 
 <template>
