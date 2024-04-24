@@ -18,8 +18,6 @@ watch(() => {
 })
 onMounted(() => {
     changeStatus(0)
-    var temp = window.atob("eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI3NDljOWU1YjQwMjk0ODg1YTBiODlhOTQ0ZmM0MmI5YiIsInN1YiI6IjE3ODE5NDQ1NTA2ODMyNTQ3ODYiLCJpc3MiOiJzZyIsImlhdCI6MTcxMzc5NjMyOSwiZXhwIjoxNzEzNzk5OTI5fQ.eM3ykxk57c1w1pCt3d8Gc8bMe2Wf-UvDT7i32zzg5Qc")
-    console.log(temp);
 })
 </script>
 

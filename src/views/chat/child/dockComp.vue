@@ -1,6 +1,8 @@
 <script setup>
 import functionTab from '@/views/chat/child/functionTab.vue';
 import chatItem from '@/components/chatItem.vue'
+import searchBox from '@/components/searchBox.vue';
+
 </script>
 
 <template>
@@ -9,6 +11,9 @@ import chatItem from '@/components/chatItem.vue'
             <functionTab></functionTab>
         </div>
         <div class="container-right">
+            <div class="wrapperlist">
+                <!-- <searchBox></searchBox> -->
+            </div>
             <div class="wrapperlist">
                 <div style="display: flex; flex-direction: column;">
                     <chatItem v-for="item in 12" class="wrapper" :key="item"></chatItem>
@@ -36,6 +41,7 @@ import chatItem from '@/components/chatItem.vue'
         display: flex;
         width: calc(100% - 4vw);
         height: calc(100vh - 1px);
+        flex-direction: column;
         overflow-y: auto;
         .wrapperlist{
             display: flex;

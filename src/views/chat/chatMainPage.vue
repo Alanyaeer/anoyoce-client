@@ -1,6 +1,6 @@
 <script setup>
 import dockComp from '@/views/chat/child/dockComp.vue';
-
+import searchBox from '@/components/searchBox.vue';
 </script>
 
 <template>
