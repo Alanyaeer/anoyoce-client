@@ -11,8 +11,8 @@ import searchBox from '@/components/searchBox.vue';
             <functionTab></functionTab>
         </div>
         <div class="container-right">
-            <div class="wrapperlist">
-                <!-- <searchBox></searchBox> -->
+            <div class="wrapperlist" style="padding: 10px 0px; display: flex; justify-content: center;">
+                <a-input-search style="position: relative; width: 90%;" placeholder="请输入要搜索的内容" loading search-button/>
             </div>
             <div class="wrapperlist">
                 <div style="display: flex; flex-direction: column;">

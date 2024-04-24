@@ -1,6 +1,8 @@
 <script setup>
 import dockComp from '@/views/chat/child/dockComp.vue';
-import searchBox from '@/components/searchBox.vue';
+import chatWindow from '@/views/chat/child/chatWindow.vue'
+import chatContent from '@/views/chat/child/chatContent.vue'
+
 </script>
 
 <template>
@@ -16,12 +18,12 @@ import searchBox from '@/components/searchBox.vue';
             </template>
             <template #second>
                 <div>
-                    <a-split direction="vertical" :style="{height: '100%'}" default-size="600" max="600" min="200">
+                    <a-split direction="vertical" :style="{height: '100%'}" default-size="500" max="600" min="300">
                         <template #first>
-
+                            <chatWindow></chatWindow>
                         </template>
                         <template #second>
-
+                            <chatContent></chatContent>
                         </template>
                     </a-split>
                 </div>
@@ -35,6 +37,11 @@ import searchBox from '@/components/searchBox.vue';
     height: calc(100vh - 1px);
     width: calc(100vw - 1px);
     min-width: '500px';
+    // /* Add your background pattern here */
+    // background-color: #ffffff;
+    // background-image: radial-gradient(rgba(12, 12, 12, 0.171) 2px, transparent 0);
+    // background-size: 30px 30px;
+    // background-position: -5px -5px;
     // border: '1px solid var(--color-border)';
 }
 </style>
