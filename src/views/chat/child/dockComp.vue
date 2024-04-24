@@ -26,7 +26,7 @@ import chatItem from '@/components/chatItem.vue'
         position: relative;
         height: calc(100vh - 1px);
         width: 4vw;
-        background-color: #D0DFEB;
+        background-color: #DEE5F5;
         backdrop-filter: blur(10px); /* 背景模糊10像素 */
         display: flex;
         flex-direction: column;

@@ -8,8 +8,8 @@ import dockComp from '@/views/chat/child/dockComp.vue';
         <a-split 
             class="containers"
             default-size="350"
-            min="250"
-            max="500"
+            min="300"
+            max="450"
         >
             <template #first>
                 <dockComp></dockComp>
