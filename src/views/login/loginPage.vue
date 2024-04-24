@@ -1,45 +1,127 @@
+
 <script setup>
-    // const login = new VueUseComponentsResolver({
+    // const login = new Vue({
     //     el: '#login',
     //     data:{
     //         title: 'login'
     //     }
     // })
+    import { ref } from 'vue';
+    const title = ref('登录');
+    const titleN = ref(0);
+    const form = ref({});
+    const visibility = ref(true);
+    
+    const updateTitle = () =>{
+        if(title.value=='登录'){
+            titleN.value = 1;
+            title.value = '注册';
+        }
+        else if(title.value == '注册'){
+            titleN.value = 0;
+            title.value = '登录';
+        }
+    };
+    
+    const Confirm =() =>{
+
+    }
 </script>
 
 <template>
-    <div class="login">
-        <div class="head">注册</div>
-        <div class = "account"><input type="text" placeholder="请输入账号"></div>
-        <div><input type="password" placeholder="请输入密码"></div>
-        <div class="button1"><a-button type="primary">Primary</a-button></div>
-    </div>
+    <div class="body">
+        <div class ="login">
+            <div class ="head">{{title}}</div>
+            <div class ="accountBox">
+                <a-input :style="{width:'320px'}" v-model="form.userName" placeholder="请输入账号" allow-clear />
+            </div>
+            <div class ="passwordBox">
+                <a-input-password
+                v-model:visibility="visibility"
+                placeholder="请输入密码"
+                :style="{width:'320px'}"
+                v-model="form.password" 
+                :defaultVisibility="false"
+                allow-clear/>
+            </div>
+            <div class ="btn1"><a-button type="primary">确定</a-button></div>
+            <div class ="btn1" style="top: 150px; position: relative;"  >
+                <div @click="updateTitle()"><a-button type="primary">切换</a-button></div>
+            </div>
+        <!-- <div><input value="Login" class="button1" type="submit"></div> -->
+        </div>
+    </div>  
+    
 </template>
 
 <style lang="scss" scoped>
-    .login{
-      width: 30%;
-      height: 400px;
-      background-color: #09263a60;
-      margin: auto;
-      margin-top: 10%;
-      text-align: center;
-      border-radius: 10px;
-      padding: 50px 50px;
-    }
-    .head{
-        font-size: 38px;
-        font-weight: 700;
-        text-align: center;
-        line-height: 200px;
-        color: #253175;
-    }
-    .account{
-        position: relative;
-        bottom: 10px;
-    }
-    .button1{
-        position: relative;
-        top: 30px;
-    }
+    .body{
+        width: 100vw;
+        height: 100vh;
+        background-color: #09263a60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .login{
+            position: relative;
+            width: 30%;
+            height: 400px;
+            background-color: #09263a60;
+            margin: auto;
+            margin-top: 10%;
+            border-radius: 10px;
+            padding: 50px 50px;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            .head{
+                font-size: 38px;
+                font-weight: 700;
+                line-height: 100px;
+                color: #253175;
+            }
+            .accountBox{
+                position: relative;
+                top: 60px;
+                bottom: 10px;
+            }
+            .passwordBox{
+                position: relative;
+                top: 80px;
+                bottom: 10px;
+            }
+            .btn1{
+                position: relative;
+                top: 120px;
+                border-radius: 45px;
+            }
+            // .btn2{
+            //     position: relative;
+            //     top: 160px;
+            // }
+            // .btn2 {
+            //     position: relative;
+            //     padding: 0.5em 0.1em;
+            //     font-size: 14px;
+            //     // width: 60px;
+            //     // text-align: center;
+            //     text-transform: uppercase;
+            //     letter-spacing: 2px;
+            //     font-weight: 500;
+            //     color: #000;
+            //     background-color: #fff; 
+            //     border: none;
+            //     border-radius: 45px;
+            //     box-shadow: 0px 10px 16px rgba(0, 0, 0, 0.1);
+            //     transition: all 0.3s ease 0s;
+            //     cursor: pointer;
+            //     outline: none;
+            //     top: 150px;
+                
+            // }
+        }
+
+    }   
+    
+    
 </style>
