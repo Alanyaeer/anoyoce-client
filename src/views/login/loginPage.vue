@@ -1,6 +1,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import {getLogin, register} from '@/api/user'
 
 const title = ref('登录');
 const titleN = ref(0);

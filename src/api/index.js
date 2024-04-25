@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { ElNotification } from 'element-plus';
 import {useRouter} from 'vue-router' 
 //全局参数，自定义参数可在发送请求时设置
 axios.defaults.timeout = 600000 //超时时间ms

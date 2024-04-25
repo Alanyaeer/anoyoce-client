@@ -1,38 +1,58 @@
 <script setup>
+import {ref, onMounted} from 'vue'
+import {getLogin, register} from '@/api/user'
+/**
+ * 账号和密码的 表单
+ * form.password 密码
+ * form.userName 账号
+ */
+const form = ref({})
+// 登录
+const login = async () => {
+  
+  // 向后端发起一个请求的接口
+  // 第一个 'user'  你要去看接口文档的接受的变量的名称， 
+  // form 就是我们传入的数据
+  let obj = await getLogin({'user': form.value})
+  console.log(obj);
+}
+// 类似这样写一个注册的就好了 
+onMounted(() => {
 
+})
 </script>
 
 <template>
-    <div class="container">
-        <div class="wrapper">
+  <div class="container">
+      <div class="wrapper">
         <div class="card-switch">
             <label class="switch">
-               <input type="checkbox" class="toggle">
-               <span class="slider"></span>
-               <span class="card-side"></span>
-               <div class="flip-card__inner">
+              <input type="checkbox" class="toggle">
+              <span class="slider"></span>
+              <span class="card-side"></span>
+              <div class="flip-card__inner">
                   <div class="flip-card__front">
-                     <div class="title">Log in</div>
-                     <form class="flip-card__form" action="">
+                    <div class="title">Log in</div>
+                    <form class="flip-card__form" action="">
                         <input class="flip-card__input" name="email" placeholder="Email" type="email">
                         <input class="flip-card__input" name="password" placeholder="Password" type="password">
                         <button class="flip-card__btn">Let`s go!</button>
-                     </form>
+                    </form>
                   </div>
                   <div class="flip-card__back">
-                     <div class="title">Sign up</div>
-                     <form class="flip-card__form" action="">
-                        <input class="flip-card__input" placeholder="Name" type="name">
-                        <input class="flip-card__input" name="email" placeholder="Email" type="email">
-                        <input class="flip-card__input" name="password" placeholder="Password" type="password">
-                        <button class="flip-card__btn">Confirm!</button>
-                     </form>
+                    <div class="title">Sign up</div>
+                      <form class="flip-card__form" action="">
+                          <input class="flip-card__input" placeholder="Name" type="name">
+                          <input class="flip-card__input" name="email" placeholder="Email" type="email">
+                          <input class="flip-card__input" name="password" placeholder="Password" type="password">
+                          <button class="flip-card__btn">Confirm!</button>
+                      </form>
                   </div>
-               </div>
+                </div>
             </label>
         </div>   
-   </div>
-    </div>
+      </div>
+  </div>
     
 
 </template>
@@ -42,22 +62,28 @@
 .container{
     display: flex;
     justify-content: center;
-    align-items: center;
+    // align-items: center;
     position: relative;
+    width: 100vw;
+    height: 100vh;
+    --s: 82px;
+  /* Add your background pattern here */
+  background: repeating-radial-gradient(circle, #fff, #fff 5px, #000 6px);
+  background-size: 50px 100px;
     .wrapper {
-  --input-focus: #2d8cf0;
-  --font-color: #323232;
-  --font-color-sub: #666;
-  --bg-color: #fff;
-  --bg-color-alt: #666;
-  --main-color: #323232;
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* align-items: center; */
+      --input-focus: #2d8cf0;
+      --font-color: #323232;
+      --font-color-sub: #666;
+      --bg-color: #fff;
+      --bg-color-alt: #666;
+      --main-color: #323232;
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* align-items: center; */
 }
   /* switch card */
   .switch {
-    transform: translateY(200px);
+    transform: translateY(150px);
     position: relative;
     display: flex;
     flex-direction: column;
