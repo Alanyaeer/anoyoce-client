@@ -8,4 +8,37 @@ export const getLogin = (params) => {
         data: params
     })
 }
-// 写一个注册的 ， 可以参考我哪个 oj 的 client 
+
+export const register = (parmas) => {
+    return axios({
+        method: 'put' ,
+        baseURL: `${baseUrl}/api/user/register` ,
+        data: parmas
+    })
+}
+
+export const Logout = (params) => {
+    return axios({
+        method: 'post' ,
+        baseURL: `${baseUrl}/api/user/logout` ,
+        data: params
+    })
+}
+
+/*
+export const queryAllUser = params => {
+    return axios({
+        method: 'get',
+        baseURL: `${baseUrl}/api/uesr/userPage`,
+        params: params
+    })
+}
+
+export const getUserInfo = (params) => {
+    return axios({
+        method: 'post' ,
+        baseURL: `${baseUrl}/api/user/getUserInfo` ,
+        data: params
+    })
+}
+*/

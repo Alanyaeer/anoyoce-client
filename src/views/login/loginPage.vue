@@ -1,52 +1,83 @@
 
 <script setup>
-    // const login = new Vue({
-    //     el: '#login',
-    //     data:{
-    //         title: 'login'
-    //     }
-    // })
-    import { ref } from 'vue';
-    const title = ref('登录');
-    const titleN = ref(0);
-    const form = ref({});
-    const visibility = ref(true);
-    
-    const updateTitle = () =>{
-        if(title.value=='登录'){
-            titleN.value = 1;
-            title.value = '注册';
-        }
-        else if(title.value == '注册'){
-            titleN.value = 0;
-            title.value = '登录';
-        }
-    };
-    
-    const Confirm =() =>{
+import { ref } from 'vue';
 
+const title = ref('登录');
+const titleN = ref(0);
+const form = ref({});
+const visibility = ref(true);
+
+const updateTitle = () =>{
+    if(title.value=='登录'){
+        titleN.value = 1;
+        title.value = '注册';
     }
+    else if(title.value == '注册'){
+        titleN.value = 0;
+        title.value = '登录';
+    }
+};
+
+const Confirm =() =>{
+}
+
+const  preValidate =(id, password, repassword) =>{
+    console.log(id, password, repassword);
+    if(password != repassword){
+        ElNotification({
+            type: 'warning',
+            message: '前后密码输入不一致',
+            title: '输入问题'
+        })
+        return false;
+    }
+    let validateStatus = 1;
+    //校验Id
+    let checkId = /^\S{6,15}$/ ;
+    //使用test方法校验
+    validateStatus &= checkId.test(id);
+    let checkPassword = /^\S{6,15}$/
+    validateStatus &= checkPassword.test(password);
+    if(validateStatus === 0){
+        ElNotification({
+            type: 'warning',
+            message: '密码强度过低或者id不满足条件',
+            title: '校验问题'
+        })
+        return false;
+    }
+    return true;
+}
+
+
+
 </script>
 
 <template>
     <div class="body">
         <div class ="login">
-            <div class ="head">{{title}}</div>
+            <div class ="head">{{ title }}</div>
             <div class ="accountBox">
-                <a-input :style="{width:'320px'}" v-model="form.userName" placeholder="请输入账号" allow-clear />
+                <a-input :style="{width:'320px'}" v-model="form.userName" 
+                placeholder="请输入账号" allow-clear />
             </div>
             <div class ="passwordBox">
-                <a-input-password
-                v-model:visibility="visibility"
-                placeholder="请输入密码"
-                :style="{width:'320px'}"
-                v-model="form.password" 
-                :defaultVisibility="false"
-                allow-clear/>
+                <a-input-password v-model:visibility="visibility" 
+                placeholder="请输入密码" :style="{width:'320px'}" 
+                v-model="form.password" :defaultVisibility="false" allow-clear/>
             </div>
-            <div class ="btn1"><a-button type="primary">确定</a-button></div>
-            <div class ="btn1" style="top: 150px; position: relative;"  >
-                <div @click="updateTitle()"><a-button type="primary">切换</a-button></div>
+            <div v-show = "titleN" class = "repasswordBox">
+                <a-input-password v-model:visibility="visibility" 
+                placeholder="请再次输入密码" :style="{width:'320px'}" 
+                v-model="form.password" :defaultVisibility="false" allow-clear/>
+            </div>
+            <div class ="btn1">
+                <a-button type="primary">确定{{ title }}</a-button>
+            </div>
+            <div class ="btn1" style="top: 150px;">
+                <div @click="updateTitle()">
+                    <a-button type="primary">切换{{ title }}</a-button>
+                </div>
             </div>
         <!-- <div><input value="Login" class="button1" type="submit"></div> -->
         </div>
@@ -82,10 +113,15 @@
             }
             .accountBox{
                 position: relative;
-                top: 60px;
+                top: 40px;
                 bottom: 10px;
             }
             .passwordBox{
+                position: relative;
+                top: 60px;
+                bottom: 10px;
+            }
+            .repasswordBox{
                 position: relative;
                 top: 80px;
                 bottom: 10px;
@@ -121,7 +157,12 @@
             // }
         }
 
-    }   
+    }
     
     
 </style>
+<!-- 
+
+
+
+-->
