@@ -1,6 +1,8 @@
 <script setup>
 import {ref, onMounted} from 'vue'
 const friendList = ref([])
+const online = ref([])     //true or flase 表示是否在线
+
 onMounted(() => {
     friendList.value = [
         {
@@ -30,9 +32,8 @@ onMounted(() => {
     <div class="container">
         <div class="wrapperList">
             <div v-for="(item, index) in friendList" :key="item" style="display: flex; gap: 10px; align-items: center; padding: 0px 10px; width: 100%; position: relative;">
-                <a-avatar>
-                    <img
-                        alt="avatar"
+                <a-avatar :size="20"><!-- 判断是否在线 -->
+                    <img style="-webkit-filter: grayscale(50%);"
                         src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
                     />
                 </a-avatar>

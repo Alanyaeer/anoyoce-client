@@ -51,38 +51,55 @@ const  preValidate =(id, password, repassword) =>{
 }
 
 
-
 </script>
 
 <template>
     <div class="body">
         <div class ="login">
-            <div class ="head">{{ title }}</div>
-            <div class ="accountBox">
-                <a-input :style="{width:'320px'}" v-model="form.userName" 
-                placeholder="请输入账号" allow-clear />
+            <div class="wrapper">
+                <label class="switch">
+                    <input type="checkbox" class="toggle">
+                    <span class="slider"></span>
+                    <span class="card-side"></span>
+                    <div class ="head">{{ title }}</div>
+                    <div class="flip-card__front">
+                        <from class ="frombox">
+                            <a-input :style="{width:'250px'}" v-model="form.userName" 
+                            placeholder="请输入账号" allow-clear />
+                        <!-- </div> -->
+                        <!-- <div class ="passwordBox"> -->
+                            <a-input-password v-model:visibility="visibility" 
+                            placeholder="请输入密码" :style="{width:'250px'}" 
+                            v-model="form.password" :defaultVisibility="false" allow-clear/>
+                            <a-button type="primary">确定{{ title }}</a-button>
+                        </from>
+                    </div>
+                    <div class="flip-card__back">
+                        <from class ="frombox">
+                            <a-input :style="{width:'250px'}" v-model="form.userName" 
+                            placeholder="请输入账号" allow-clear />
+                            <a-input-password v-model:visibility="visibility" 
+                            placeholder="请输入密码" :style="{width:'250px'}" 
+                            v-model="form.password" :defaultVisibility="false" allow-clear/>
+                            <a-input-password v-model:visibility="visibility" 
+                            placeholder="请再次输入密码" :style="{width:'250px'}" 
+                            v-model="form.password" :defaultVisibility="false" allow-clear/>
+                            <a-button type="primary">确定{{ title }}</a-button>
+                        </from>
+                    </div>
+                    <!-- <div class ="btn1">
+                        <a-button type="primary">确定{{ title }}</a-button>
+                    </div> -->
+                    <!-- <div class ="btn1" style="top: 150px;">
+                        <div @click="updateTitle()">
+                            <a-button type="primary">切换{{ title }}</a-button>
+                        </div>
+                    </div> -->
+                </label>
             </div>
-            <div class ="passwordBox">
-                <a-input-password v-model:visibility="visibility" 
-                placeholder="请输入密码" :style="{width:'320px'}" 
-                v-model="form.password" :defaultVisibility="false" allow-clear/>
-            </div>
-            <div v-show = "titleN" class = "repasswordBox">
-                <a-input-password v-model:visibility="visibility" 
-                placeholder="请再次输入密码" :style="{width:'320px'}" 
-                v-model="form.password" :defaultVisibility="false" allow-clear/>
-            </div>
-            <div class ="btn1">
-                <a-button type="primary">确定{{ title }}</a-button>
-            </div>
-            <div class ="btn1" style="top: 150px;">
-                <div @click="updateTitle()">
-                    <a-button type="primary">切换{{ title }}</a-button>
-                </div>
-            </div>
-        <!-- <div><input value="Login" class="button1" type="submit"></div> -->
         </div>
-    </div>  
+    </div>
+
     
 </template>
 
@@ -96,7 +113,7 @@ const  preValidate =(id, password, repassword) =>{
         justify-content: center;
         .login{
             position: relative;
-            width: 30%;
+            width: 360px;
             height: 400px;
             background-color: #09263a60;
             margin: auto;
@@ -106,27 +123,144 @@ const  preValidate =(id, password, repassword) =>{
             text-align: center;
             align-items: center;
             justify-content: center;
+            // .switch {
+            // transform: translateY(50px);
+            // position: relative;
+            // display: flex;
+            // flex-direction: column;
+            // justify-content: center;
+            // align-items: center;
+            // // gap: 30px;
+            // // width: 50px;
+            // height: 120px;
+            // }
+            .wrapper {
+                --input-focus: #2d8cf0;
+                --font-color: #323232;
+                --font-color-sub: #666;
+                --bg-color: #fff;
+                --bg-color-alt: #666;
+                --main-color: #323232;
+                // display: flex;
+                // flex-direction: column;
+                // align-items: center;
+            }
+            .card-side::before {
+                position: relative;
+                content: '注册';
+                left: -70px;
+                top: 0;
+                width: 100px;
+                text-decoration: underline;
+                color: var(--font-color);
+                font-weight: 600;
+            }
+            .card-side::after {
+                position: relative;
+                content: '登录';
+                left: 70px;
+                top: 0;
+                width: 100px;
+                text-decoration: none;
+                color: var(--font-color);
+                font-weight: 600;
+            }
+            .toggle {
+                position: relative;
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+            .slider {
+                box-sizing: border-box;
+                border-radius: 5px;
+                border: 2px solid var(--main-color);
+                box-shadow: 4px 4px var(--main-color);
+                position: relative;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: var(--bg-colorcolor);
+                transition: 0.3s;
+            }
+            .slider:before {
+                box-sizing: border-box;
+                position: relative;
+                content: "";
+                height: 20px;
+                width: 20px;
+                border: 2px solid var(--main-color);
+                border-radius: 5px;
+                left: -2px;
+                bottom: 2px;
+                background-color: var(--bg-color);
+                box-shadow: 0 3px 0 var(--main-color);
+                transition: 0.3s;
+            }
+            .toggle:checked + .slider {
+                background-color: var(--input-focus);
+            }
+            .toggle:checked + .slider:before {
+                transform: translateX(30px);
+            }
+            .toggle:checked ~ .card-side:before {
+                text-decoration: none;
+            }
+            .toggle:checked ~ .card-side:after {
+                text-decoration: underline;
+            }
             .head{
                 font-size: 38px;
                 font-weight: 700;
                 line-height: 100px;
                 color: #253175;
             }
-            .accountBox{
+            .frombox{
                 position: relative;
                 top: 40px;
                 bottom: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
             }
-            .passwordBox{
+            .flip-card__front, .flip-card__back {
+                padding: 20px;
                 position: relative;
-                top: 60px;
-                bottom: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                // background: lightgrey;
+                gap: 20px;
+                border-radius: 5px;
+                border: 2px solid var(--main-color);
+                box-shadow: 4px 4px var(--main-color);
+            }   
+            .flip-card__back {
+                width: 100%;
+                transform: rotateY(180deg);
             }
-            .repasswordBox{
-                position: relative;
-                top: 80px;
-                bottom: 10px;
+            .toggle:checked ~ .frombox {
+                transform: rotateY(180deg);
             }
+            .toggle:checked ~ .flip-card__front {
+                box-shadow: none;
+            }
+            
+            // .passwordBox{
+            //     position: relative;
+            //     top: 60px;
+            //     bottom: 10px;
+            // }
+            // .repasswordBox{
+            //     position: relative;
+            //     top: 80px;
+            //     bottom: 10px;
+            // }
             .btn1{
                 position: relative;
                 top: 120px;
@@ -157,6 +291,7 @@ const  preValidate =(id, password, repassword) =>{
                 
             // }
         }
+        
 
     }
     
