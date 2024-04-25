@@ -12,39 +12,64 @@ onMounted(() => {
     chatList.value = [
         {
             "pid": '111',
-            "msg": "nihao"
+            "msg": "nihao",
+            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "createTime": "2024-11-2",
+            "name": "3242"
         },
         {
             "pid": '121',
-            "msg": "nihao"
+            "msg": "nihao",
+            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "createTime": "2024-11-2",
+            "name": "3242"
         },
         {
             "pid": '111',
-            "msg": "nihao"
+            "msg": "nihao",
+            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "createTime": "2024-11-2"
         },
         {
             "pid": '111',
-            "msg": "nihao"
+            "msg": "nihao",
+            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "createTime": "2024-11-2"
         },
         {
             "pid": '111',
-            "msg": "nihao"
+            "msg": "nihao",
+            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "createTime": "2024-11-2",
+            "name": "3242"
         },
         {
             "pid": '131',
-            "msg": "nihao"
+            "msg": "nihao",
+            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "createTime": "2024-11-2",
+            "name": "3242"
         },
         {
             "pid": '411',
-            "msg": "nihao"
+            "msg": "nihao",
+            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "createTime": "2024-11-2",
+            "name": "3242"
         },
         {
             "pid": '111',
-            "msg": "nihao"
+            "msg": "nihao",
+            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            "createTime": "2024-11-2",
+            "name": "3242"
         },
         {
             "pid": '411',
-            "msg": "nihao"
+            "msg": "nihao",
+            "avatar": "https://cdn.jsdelivr.net/gh/Alanyaeer/ImgSummary@master/img/202312111855903.webp",
+            "createTime": "2024-11-2",
+            "name": "3242"
         },
     ]
 })
@@ -55,10 +80,52 @@ onMounted(() => {
         <div class="leftWindow">
             <div v-for="(item, index) in chatList" :key="item">
                 <div v-if="item?.pid === myId" class="chatme">
-                    {{ item.msg }}
+                    <div class="chat-text">
+                        {{ item.msg }}
+                    </div>
+                    <div class="info-time ">
+                        <span style="position: relative; right: 12px;">{{ item.createTime }}</span>
+                        <el-popover
+                                :width="250"
+                                popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px; border-radius: 10px;"
+                            >
+                            <template #reference>
+                                <!-- <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" /> -->
+                                <img :src="item.avatar" alt="" />
+                            </template>
+                            <template #default>
+                                <div style="padding: 10px; display: flex;justify-content: center; align-items: center; display: flex; flex-direction: column;">
+                                    <el-avatar shape="square" :size="84" :src="item.avatar" />
+                                    <span style="margin-top: 10px;">{{ item?.name }}</span>
+                                </div>
+                            </template>
+                        </el-popover>
+                        
+                    </div>
                 </div>
                 <div v-else class="chatfriend">
-                    {{ item.msg }}
+                    <div class="chat-text">
+
+                        {{ item.msg }}
+                    </div>
+                    <div class="info-time">
+                        <el-popover
+                                :width="250"
+                                popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px;  border-radius: 10px;"
+                            >
+                            <template #reference>
+                                <!-- <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" /> -->
+                                <img :src="item.avatar" alt="" />
+                            </template>
+                            <template #default>
+                                <div style="padding: 10px; display: flex; justify-content: center; align-items: center; display: flex; flex-direction: column;">
+                                    <el-avatar shape="square" :size="84" :src="item.avatar" />
+                                    <span style="margin-top: 10px;">{{ item.name }}</span>
+                                </div>
+                            </template>
+                        </el-popover>
+                        <span >{{ item.createTime }}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,6 +154,8 @@ onMounted(() => {
         width: calc(100% - 20vw - 2px);
         word-break: break-all;
         flex-direction: column;
+        background-color: #F2F2F2;
+        overflow-y: auto;
         .chatme{
             width: 100%;
             float: right;
@@ -107,11 +176,27 @@ onMounted(() => {
                 background-color: rgb(26, 129, 219);
                 }
             }
+            .info-time {
+                margin: 10px 0;
+                color: #9C9C9C;
+                font-size: 14px;
+                img {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    vertical-align: middle;
+                    margin-right: 10px;
+                }
+                span:last-child {
+                    color: rgb(101, 104, 115);
+                    margin-left: 10px;
+                    vertical-align: middle;
+                }
+            }
         }
         .chatfriend{
             position: relative;
             float: left;
-            width: 100%;
             margin-bottom: 20px;
             flex-direction: column;
             justify-content: flex-start;
@@ -120,10 +205,27 @@ onMounted(() => {
                 max-width: 90%;
                 padding: 20px;
                 border-radius: 20px 20px 20px 5px;
-                background-color: rgb(56, 60, 75);
-                color: #fff;
+                background-color: #FFFFFF;
+                color: black;
                 &:hover {
-                    background-color: rgb(39, 42, 55);
+                    background-color: #eaeaea;
+                }
+            }
+            .info-time {
+                margin: 10px 0 10px 0px;
+                color: #9C9C9C;
+                font-size: 14px;
+                img {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    vertical-align: middle;
+                    margin-right: 10px;
+                }
+                span:last-child {
+                    color: rgb(101, 104, 115);
+                    margin-left: 10px;
+                    vertical-align: middle;
                 }
             }
         }
@@ -133,6 +235,7 @@ onMounted(() => {
         position: relative;
         border-left: 5px solid #E9E9E9;
         width: 20vw;
+        background-color: #F2F2F2;  
         height: 100%;
         flex-direction: column;
         .rightTop{

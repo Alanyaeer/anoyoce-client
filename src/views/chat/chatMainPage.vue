@@ -18,7 +18,7 @@ import chatContent from '@/views/chat/child/chatContent.vue'
             </template>
             <template #second>
                 <div>
-                    <a-split direction="vertical" :style="{height: '100%'}" default-size="500" max="600" min="300">
+                    <a-split direction="vertical"  default-size="500" max="500" min="500">
                         <template #first>
                             <chatWindow></chatWindow>
                         </template>

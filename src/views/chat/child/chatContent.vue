@@ -35,6 +35,8 @@ watch(() => sendContent,
     position: relative;
     display: flex;
     flex-direction: column;
+    background-color: #F2F2F2;
+    height: max-content;
     .toolbar{
         position: relative;
         display: flex;
@@ -56,7 +58,6 @@ watch(() => sendContent,
     }
     .textbar{
        position: relative;
-       height: 100%;
        width: calc(100% - 20px);
        padding: 0px 10px;
     }
