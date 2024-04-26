@@ -8,6 +8,22 @@ const titleN = ref(0);
 const form = ref({});
 const visibility = ref(true);
 
+const login = async () => {
+  
+  // 向后端发起一个请求的接口
+  // 第一个 'user'  你要去看接口文档的接受的变量的名称， 
+  // form 就是我们传入的数据
+  let rep = await getLogin({'user': form.value})
+  console.log(rep)
+  localStorage.setItem('token', rep.data)
+}
+// 类似这样写一个注册的就好了 
+const Register = async () => {
+  let rep = await register({'user': form.value})
+  console.log(rep)
+  localStorage.setItem('token', rep.data)
+}
+
 const updateTitle = () =>{
     if(title.value=='登录'){
         titleN.value = 1;
@@ -127,7 +143,7 @@ const  preValidate =(id, password, repassword) =>{
                                         placeholder="请再次输入密码" :style="{width:'250px'}" 
                                         v-model="form.repassword" :defaultVisibility="false" allow-clear/>
                                     </label>
-                                    <a-button type="primary">确定注册</a-button>
+                                    <a-button @click="Register()" type="primary">确定注册</a-button>
                                 </form>
                                 </div>
                             <div class="flip-card__back">
@@ -141,7 +157,7 @@ const  preValidate =(id, password, repassword) =>{
                                     placeholder="请输入密码" :style="{width:'250px'}" 
                                     v-model="form.password" :defaultVisibility="false" allow-clear/>
                                 </label>
-                                <a-button type="primary">确定登录</a-button>
+                                <a-button @click="getLogin()" type="primary">确定登录</a-button>
                                 </form>
                             </div>
                         </div>
