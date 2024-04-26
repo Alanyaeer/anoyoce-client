@@ -9,7 +9,6 @@ const router = useRouter()
 
 axios.interceptors.request.use(
   function (config) {
-    config.headers['attack-code'] = "Eren_yeager"
     if(localStorage.getItem('token') != null){
       config.headers['token'] = localStorage.getItem('token')
     }

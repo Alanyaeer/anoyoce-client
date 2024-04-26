@@ -157,7 +157,7 @@ const  preValidate =(id, password, repassword) =>{
                                     placeholder="请输入密码" :style="{width:'250px'}" 
                                     v-model="form.password" :defaultVisibility="false" allow-clear/>
                                 </label>
-                                <a-button @click="getLogin()" type="primary">确定登录</a-button>
+                                <a-button @click="login()" type="primary">确定登录</a-button>
                                 </form>
                             </div>
                         </div>

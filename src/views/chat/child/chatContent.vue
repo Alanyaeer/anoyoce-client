@@ -24,7 +24,7 @@ watch(() => sendContent,
             <svg t="1713968570930" class="icon1" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1849" width="28" height="28"><path d="M502.178909 38.632727c-131.072 0-237.521455 104.168727-237.521454 232.727273s106.402909 232.727273 237.521454 232.727273c131.165091 0 237.568-104.168727 237.568-232.727273s-106.309818-232.727273-237.568-232.727273z m0 0c-131.072 0-237.521455 104.168727-237.521454 232.727273s106.402909 232.727273 237.521454 232.727273c131.165091 0 237.568-104.168727 237.568-232.727273s-106.309818-232.727273-237.568-232.727273zM413.184 581.678545c-169.472 0-306.874182 134.609455-306.874182 300.590546v19.316364c0 67.909818 137.402182 67.956364 306.874182 67.956363h197.957818c169.425455 0 306.781091-2.513455 306.781091-67.956363v-19.316364c0-165.981091-137.355636-300.590545-306.781091-300.590546H413.184z m0 0" p-id="1850" fill="#0093F5"></path></svg>
         </div>
         <div class="textbar">
-            <a-mention v-model="sendContent" style="position: relative; height: 18vh; margin-bottom: 2vh;"  :data="['Bytedance', 'Bytedesign', 'Bytenumner']" placeholder="输入内容，@指定某个同学" type="textarea"  />
+            <a-mention v-model="sendContent" style="position: relative; height: 19.4vh; margin-bottom: 2vh;"  :data="['Bytedance', 'Bytedesign', 'Bytenumner']" placeholder="输入内容，@指定某个同学" type="textarea"  />
             <a-button style="float: right; " type="primary" :loading="sendLoading" @click="handleClick" :disabled="sendDisabled">发送</a-button>
         </div>
     </div>
