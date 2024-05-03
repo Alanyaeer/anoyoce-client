@@ -6,7 +6,7 @@ import chatContent from '@/views/chat/child/chatContent.vue'
 </script>
 
 <template>
-    <div>
+    <div style="position: absolute;">
         <a-split 
             class="containers"
             default-size="350"

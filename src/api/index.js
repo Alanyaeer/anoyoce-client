@@ -39,7 +39,7 @@ axios.interceptors.response.use(function (response) {
 
 const base = {
   axios: axios,
-  baseUrl: 'http://localhost:8088'
+  baseUrl: 'http://localhost:180'
 }
 
 export default base
