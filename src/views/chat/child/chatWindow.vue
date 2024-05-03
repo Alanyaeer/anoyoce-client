@@ -178,7 +178,7 @@ onMounted(() => {
             }
             .info-time {
                 margin: 10px 0;
-                color: #9C9C9C;
+                color: #0c465b;
                 font-size: 14px;
                 img {
                     width: 30px;
@@ -223,7 +223,7 @@ onMounted(() => {
                     margin-right: 10px;
                 }
                 span:last-child {
-                    color: rgb(101, 104, 115);
+                    color: rgb(19, 65, 102);
                     margin-left: 10px;
                     vertical-align: middle;
                 }
