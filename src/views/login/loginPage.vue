@@ -60,19 +60,7 @@ const Register = async () => {
 
 }
 
-const updateTitle = () =>{
-    if(title.value=='登录'){
-        titleN.value = 1;
-        title.value = '注册';
-    }
-    else if(title.value == '注册'){
-        titleN.value = 0;
-        title.value = '登录';
-    }
-};
 
-const Confirm =() =>{
-}
 
 
 onMounted(() =>{
@@ -88,6 +76,7 @@ onMounted(() =>{
     <div class="container"><!-- 底层居中 -->
         <div class="wrapper"><!-- 整个登录注册面板 -->
             <div class="aswitch">
+                
                 <label class="switch">
                     <input type="checkbox" v-model="isChecked" class="toggle">
                     <span class="slider"></span>
