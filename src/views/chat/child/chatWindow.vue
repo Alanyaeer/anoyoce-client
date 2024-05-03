@@ -6,7 +6,6 @@ const test = ref("1");
 const roomType = ref(1)
 const chatList = ref()
 const myId = "111"
-
 onMounted(() => {
     console.log(test.value);
     chatList.value = [
