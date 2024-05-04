@@ -32,3 +32,10 @@ export const queryRoomUser = (params) => {
         params: params
     })
 }
+export const addRoom = (params) => {
+    return axios({
+        method: 'put',
+        baseURL: `${baseUrl}/api/room//join/room`,
+        params: params
+    })
+}

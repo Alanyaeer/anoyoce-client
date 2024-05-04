@@ -11,12 +11,18 @@ export const useUserInfoStore = defineStore(
         const getUserInfo = () => {
             return userInfo.value
         }
+        /**
+         * 这个
+         */
+        const changeUserOnlineStatus = (onlineStatus) => {
+            userInfo.value.online = onlineStatus
+        }
         const reloadUserInfo = async () => {
             let rep =  await queryUser()
             if(rep.code === 200){
                 setUserInfo(rep.data)
             }
         }
-        return {userInfo, setUserInfo, getUserInfo, reloadUserInfo}
+        return {userInfo, setUserInfo, getUserInfo, reloadUserInfo, changeUserOnlineStatus}
     }
 )

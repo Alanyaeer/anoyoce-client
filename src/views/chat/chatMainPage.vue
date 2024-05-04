@@ -51,6 +51,19 @@ const userSocketInit = () => {
         console.log("websocket已打开");
 
     };
+    /**
+     * 这是消息的发送
+     * {
+     *     "type": 1,
+     *      "msg": obj
+     * }
+     * 这是消息的接受
+     * {
+     *      "type" : 2,
+     *      "msg": obj
+     * }
+     * @param {*} msg 
+     */
     socket.onmessage = function (msg) {
       if(msg === ""){
         console.log('保持连接测试');
@@ -75,11 +88,13 @@ const userSocketInit = () => {
     //     }
     //   }
     }
-    socket.onclose = function (e) {
+    socket.onclose = (e)=> {
       console.log('websocket关闭', e.code+ ' '+e.reason+' ' + e.wasClean)
+      window.alert('websocket关闭')
     }
-    socket.onerror = function () {
+    socket.onerror =  ()=> {
       console.log('websocket发送错误', );
+      window.alert('websocket发送错误')
     }
 }
 onMounted(async () => {

@@ -1,76 +1,14 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import TvError from '@/components/TvError.vue';
 import friendListTable from '@/views/chat/child/friendListTable.vue'
+import {useRoomStore} from '@/stores'
+import {formatDate} from '@/utils/dayUtils'
+const roomStore = useRoomStore()
 const test = ref("1");
 const roomType = ref(1)
-const chatList = ref()
-const myId = "111"
+const chatList = computed(() => roomStore.chatInfoList)
 onMounted(() => {
-    console.log(test.value);
-    chatList.value = [
-        {
-            "pid": '111',
-            "msg": "nihao",
-            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "createTime": "2024-11-2",
-            "name": "3242"
-        },
-        {
-            "pid": '121',
-            "msg": "nihao",
-            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "createTime": "2024-11-2",
-            "name": "3242"
-        },
-        {
-            "pid": '111',
-            "msg": "nihao",
-            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "createTime": "2024-11-2"
-        },
-        {
-            "pid": '111',
-            "msg": "nihao",
-            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "createTime": "2024-11-2"
-        },
-        {
-            "pid": '111',
-            "msg": "nihao",
-            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "createTime": "2024-11-2",
-            "name": "3242"
-        },
-        {
-            "pid": '131',
-            "msg": "nihao",
-            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "createTime": "2024-11-2",
-            "name": "3242"
-        },
-        {
-            "pid": '411',
-            "msg": "nihao",
-            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "createTime": "2024-11-2",
-            "name": "3242"
-        },
-        {
-            "pid": '111',
-            "msg": "nihao",
-            "avatar": "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-            "createTime": "2024-11-2",
-            "name": "3242"
-        },
-        {
-            "pid": '411',
-            "msg": "nihao",
-            "avatar": "https://cdn.jsdelivr.net/gh/Alanyaeer/ImgSummary@master/img/202312111855903.webp",
-            "createTime": "2024-11-2",
-            "name": "3242"
-        },
-    ]
 })
 </script>
 
@@ -80,22 +18,21 @@ onMounted(() => {
             <div v-for="(item, index) in chatList" :key="item">
                 <div v-if="item?.pid === myId" class="chatme">
                     <div class="chat-text">
-                        {{ item.msg }}
+                        {{ item?.message }}
                     </div>
                     <div class="info-time ">
-                        <span style="position: relative; right: 12px;">{{ item.createTime }}</span>
+                        <span style="position: relative; right: 12px;">{{ formatDate(item?.createTime) }}</span>
                         <el-popover
                                 :width="250"
                                 popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px; border-radius: 10px;"
                             >
                             <template #reference>
-                                <!-- <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" /> -->
-                                <img :src="item.avatar" alt="" />
+                                <img :src="item?.userInfo?.avatar" alt="" />
                             </template>
                             <template #default>
                                 <div style="padding: 10px; display: flex;justify-content: center; align-items: center; display: flex; flex-direction: column;">
-                                    <el-avatar shape="square" :size="84" :src="item.avatar" />
-                                    <span style="margin-top: 10px;">{{ item?.name }}</span>
+                                    <el-avatar shape="square" :size="84" :src="item?.userInfo?.avatar" />
+                                    <span style="margin-top: 10px;">{{ item?.userInfo?.nickName }}</span>
                                 </div>
                             </template>
                         </el-popover>
@@ -125,6 +62,11 @@ onMounted(() => {
                         <span >{{ item.createTime }}</span>
                     </div>
                 </div>
+            </div>
+            <div v-if="chatList.length === 0" style="display: flex; position: relative; top: 50%; translate: 0% -50%">
+                <a-empty >
+                    暂无聊天记录
+                </a-empty>
             </div>
         </div>
         <div class="rightCard">

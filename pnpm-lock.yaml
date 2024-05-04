@@ -8,6 +8,9 @@ dependencies:
   axios:
     specifier: ^1.6.8
     version: 1.6.8
+  dayjs:
+    specifier: ^1.11.11
+    version: 1.11.11
   element-plus:
     specifier: ^2.7.1
     version: 2.7.1(vue@3.4.23)
@@ -88,7 +91,7 @@ packages:
       b-tween: 0.3.3
       b-validate: 1.5.3
       compute-scroll-into-view: 1.0.20
-      dayjs: 1.11.10
+      dayjs: 1.11.11
       number-precision: 1.6.0
       resize-observer-polyfill: 1.5.1
       scroll-into-view-if-needed: 2.2.31
@@ -949,8 +952,8 @@ packages:
   /csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
-  /dayjs@1.11.10:
-    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
+  /dayjs@1.11.11:
+    resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
 
   /debug@4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
@@ -993,7 +996,7 @@ packages:
       '@types/lodash-es': 4.17.12
       '@vueuse/core': 9.13.0(vue@3.4.23)
       async-validator: 4.2.5
-      dayjs: 1.11.10
+      dayjs: 1.11.11
       escape-html: 1.0.3
       lodash: 4.17.21
       lodash-es: 4.17.21

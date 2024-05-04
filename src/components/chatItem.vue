@@ -5,6 +5,9 @@ const props = defineProps(
         roomInfo: {
             type: Object,
             required: true,
+        },
+        index: {
+            type: Number
         }
     }
 )

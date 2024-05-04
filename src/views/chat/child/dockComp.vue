@@ -1,11 +1,13 @@
 <script setup>
 import functionTab from '@/views/chat/child/functionTab.vue';
 import chatItem from '@/components/chatItem.vue'
-import searchBox from '@/components/searchBox.vue';
 import {ref, onMounted, computed} from 'vue'
 import { useRoomStore } from '@/stores'
 const roomStore = useRoomStore()
 const roomList = computed(() => roomStore.roomList)
+const choseRoom = (index) => {
+    roomStore.setCurrentRoomIndex(index)
+}
 onMounted(async () => {
     await roomStore.reloadRoomList()
 })
@@ -27,9 +29,8 @@ onMounted(async () => {
                 </a-button>
             </div>
             <div class="wrapperlist">
-                
                 <div style="display: flex; flex-direction: column;">
-                    <chatItem v-for="(item, index) in roomList" :roomInfo="item" :key="item.index" class="wrapper"></chatItem>
+                    <chatItem v-for="(item, index) in roomList" @click="choseRoom(index)" :index="index" :roomInfo="item" :key="item.index" class="wrapper"></chatItem>
                 </div>
             </div>
         </div>

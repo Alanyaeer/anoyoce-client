@@ -1,13 +1,29 @@
 import { defineStore } from "pinia";
-import {ref, watch} from 'vue'
+import {ref, watch, computed} from 'vue'
 import {queryRoomUserAdd, insertRoom, queryRoomUser}  from '@/api/room'
+import { queryChatInfoList} from '@/api/chat'
 export const useRoomStore = defineStore(
     'room-info',
     () => {
         const currentRoomIndex = ref(0)
         const roomList = ref([])
         const roomUserList = ref([])
+        const chatInfoList = ref([])
+        // 管理一个根据 在线状态进行排序的 friendList
+        const sortedFriendList =  computed(() => {
+            return roomUserList.value.sort((a, b) => {
+              // 假设我们根据 name 字段排序，如果 name 是字符串
+              if (a.online < b.online) {
+                return 1;
+              }
+              if (a.online > b.online) {
+                return -1;
+              }
+              return 0; // name 相同时，保持原顺序
+            });
+          });
         const setCurrentRoomIndex = (id) => {
+            console.log(id);
             if(id > roomList.value.length){
                 window.alert('出现错误')
                 return ;
@@ -49,13 +65,21 @@ export const useRoomStore = defineStore(
          * 更新房间号
          */
         const updateTheRoomUserList = async () => {
+            let currentRoomId = roomList.value[currentRoomIndex.value].id
             let params = {
-                roomId: roomList.value[currentRoomIndex.value].id
+                roomId: currentRoomId
             }
             let rep =  await queryRoomUser(params)
             if(rep.code === 200){
                 roomUserList.value = rep.data
-            }
+                let requestParams = {
+                    roomId: currentRoomId
+                }
+                let chatRepList = await  queryChatInfoList(requestParams)
+                if(chatRepList.code === 200){
+                    chatInfoList.value = chatRepList.data
+                }
+            }   
             else {
                 window.alert("请求失败")
             }
@@ -64,6 +88,6 @@ export const useRoomStore = defineStore(
         watch(() => currentRoomIndex.value, 
                 () => updateTheRoomUserList(),
             )
-        return {setCurrentRoomIndex, getCurrentRoomIndex , reloadRoomList, addRoom, getRoomList, roomList,  roomUserList}
+        return {setCurrentRoomIndex, getCurrentRoomIndex , reloadRoomList, addRoom, getRoomList, roomList,  roomUserList, chatInfoList, sortedFriendList}
     }
 )

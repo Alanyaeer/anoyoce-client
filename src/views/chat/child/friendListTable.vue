@@ -3,7 +3,8 @@ import {ref, onMounted, computed} from 'vue'
 import {useRoomStore} from '@/stores'
 const roomStore = useRoomStore()
 // 计算一个排序的列表(根据在线的值进行排序)
-const friendList = computed(() => roomStore.roomUserList)
+const sortedFriendList = computed(() => roomStore.sortedFriendList)
+
 onMounted(() => {
 
 })
@@ -11,7 +12,7 @@ onMounted(() => {
 <template>
     <div class="container">
         <div class="wrapperList">
-            <div v-for="(item, index) in friendList" :key="item" style="display: flex; gap: 10px; align-items: center; padding: 0px 10px; width: 100%; position: relative;">
+            <div v-for="(item, index) in sortedFriendList" :key="item" style="display: flex; gap: 10px; align-items: center; padding: 0px 10px; width: 100%; position: relative;">
                 <a-avatar :size="20"><!-- 判断是否在线 -->
                     <img style="-webkit-filter: grayscale(50%);"
                         :src="item.avatar"
