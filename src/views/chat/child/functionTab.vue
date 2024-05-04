@@ -1,6 +1,9 @@
 <script setup>
-import {ref, watch, onMounted} from 'vue'
+import {ref, watch, computed, onMounted} from 'vue'
+import {useUserInfoStore} from '@/stores';
+const userInfoStore = useUserInfoStore()
 const status = ref(0)
+const userInfo = computed(() => userInfoStore.userInfo)
 const changeStatus = (currentStatus) => {
     // 之前的 清理 
     let olddiv = document.getElementsByClassName("wrapper-item")[status.value]
@@ -16,15 +19,16 @@ watch(() => {
     () => changeStatus(),
     {deep: true}
 })
-onMounted(() => {
+onMounted(async () => {
     changeStatus(0)
+
 })
 </script>
 
 <template>
     <div class="container">
-        <a-avatar :style="{ backgroundColor: '#14a9f8' }">
-            Alan
+        <a-avatar :src="userInfo?.avatar" :style="{ backgroundColor: '#14a9f8' }">
+            {{ userInfo?.nickName }}
         </a-avatar>
         <div style="border-radius: 1000px; position: absolute; display: flex; left: 55%; top: 6.7%;  width: 15px; height: 15px; justify-content: center; align-items: center; background-color:  white;">
             <div style="border-radius: 1000px; background-color: #35EE8E; width: 12px; height: 12px;"></div>

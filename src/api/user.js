@@ -24,7 +24,13 @@ export const Logout = (params) => {
         data: params
     })
 }
-
+export const queryUser = (params) => {
+    return axios({
+        method: 'get',
+        baseURL: `${baseUrl}/api/user/query/userInfo`,
+        params: params
+    })
+}
 /*
 export const queryAllUser = params => {
     return axios({

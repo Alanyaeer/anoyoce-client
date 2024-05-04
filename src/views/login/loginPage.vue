@@ -3,8 +3,7 @@
 import { ref , onMounted} from 'vue';
 import {getLogin, register} from '@/api/user'
 
-const title = ref('登录');
-const titleN = ref(0);
+const loading = ref(false)
 const form = ref({});
 const visibility = ref(true);
 const isChecked = ref(false);
@@ -39,17 +38,19 @@ const login = async () => {
   // 向后端发起一个请求的接口
   // 第一个 'user'  你要去看接口文档的接受的变量的名称， 
   // form 就是我们传入的数据
+  loading.value = true
   let rep = await getLogin({...form.value})
   console.log(rep)
   localStorage.setItem('token', rep.data)
+  loading.value = false
   // 页面跳转
   let href = window.location.href
   let prefixHref = href.substring(0, href.length - 5)
   window.location.href = prefixHref + 'chat'
-  console.log(prefixHref + 'chat');
 }
 // 类似这样写一个注册的就好了 
 const Register = async () => {
+  loading.value = true
   if(preValidate(form.value.userName, form.value.password, form.value.repassword) === false)  return 
   let rep = await register({...form.value})
   if(rep.code === 200){
@@ -57,11 +58,9 @@ const Register = async () => {
     // 切换
     isChecked.value = !isChecked.value
   }
+  loading.value = false
 
 }
-
-
-
 
 onMounted(() =>{
     // 删除掉没有用的 token
@@ -74,17 +73,18 @@ onMounted(() =>{
 
 <template>
     <div class="container"><!-- 底层居中 -->
+        
         <div class="wrapper"><!-- 整个登录注册面板 -->
             <div class="aswitch">
                 
                 <label class="switch">
-                    <input type="checkbox" v-model="isChecked" class="toggle">
-                    <span class="slider"></span>
+                    <input type="checkbox" class="toggle" v-model="isChecked" >
+                    <span  class="slider"  ></span>
                     <span class="card-side"></span>
-                        <div class="flip-card__inner" >
-                            <div  class="flip-card__front">
+                        <div  class="flip-card__inner" >
+                            <label @click.stop class="flip-card__front">
                                 <div class="title">注册</div>
-                                <form class="flip-card__form" >
+                                <label @click.stop  class="flip-card__form" >
                                     <label @click.stop>
                                         <a-input :style="{width:'250px'}" v-model="form.userName" 
                                         placeholder="请输入账号" allow-clear /></label>
@@ -99,23 +99,23 @@ onMounted(() =>{
                                         placeholder="请再次输入密码" :style="{width:'250px'}" 
                                         v-model="form.repassword" :defaultVisibility="false" allow-clear/>
                                     </label>
-                                    <a-button @click="Register()" type="primary">确定注册</a-button>
-                                </form>
-                                </div>
-                            <div class="flip-card__back">
-                                <div class="title">登录</div>
-                                <form class="flip-card__form" action="">
-                                <label @click.stop>
-                                    <a-input :style="{width:'250px'}" v-model="form.userName" 
-                                    placeholder="请输入账号" allow-clear /></label>
-                                <label @click.stop>
-                                    <a-input-password v-model:visibility="visibility" 
-                                    placeholder="请输入密码" :style="{width:'250px'}" 
-                                    v-model="form.password" :defaultVisibility="false" allow-clear/>
+                                    <a-button :loading="loading" @click="Register()" type="primary">确定注册</a-button>
                                 </label>
-                                <a-button @click="login()" type="primary">确定登录</a-button>
-                                </form>
-                            </div>
+                                </label>
+                            <label @click.stop class="flip-card__back">
+                                <div class="title">登录</div>
+                                <label @click.stop class="flip-card__form" action="">
+                                    <label @click.stop>
+                                        <a-input :style="{width:'250px'}" v-model="form.userName" 
+                                        placeholder="请输入账号" allow-clear /></label>
+                                    <label @click.stop>
+                                        <a-input-password v-model:visibility="visibility" 
+                                        placeholder="请输入密码" :style="{width:'250px'}" 
+                                        v-model="form.password" :defaultVisibility="false" allow-clear/>
+                                    </label>
+                                    <a-button :loading="loading" @click="login()" type="primary">确定登录</a-button>
+                                </label>
+                            </label>
                         </div>
                 </label>
             </div>   
@@ -230,10 +230,12 @@ onMounted(() =>{
       
         .toggle:checked ~ .card-side:before {
             text-decoration: none;
+
         }
       
         .toggle:checked ~ .card-side:after {
-            text-decoration: underline;
+            // text-decoration: underline;
+            color: #2D8CF0;
         }
 
     /* card */ 

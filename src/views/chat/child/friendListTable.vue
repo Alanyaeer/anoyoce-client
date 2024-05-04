@@ -1,31 +1,11 @@
 <script setup>
-import {ref, onMounted} from 'vue'
-const friendList = ref([])
-const online = ref([])     //true or flase 表示是否在线
-
+import {ref, onMounted, computed} from 'vue'
+import {useRoomStore} from '@/stores'
+const roomStore = useRoomStore()
+// 计算一个排序的列表(根据在线的值进行排序)
+const friendList = computed(() => roomStore.roomUserList)
 onMounted(() => {
-    friendList.value = [
-        {
-            userId: "1324",
-            avatar: "https://cdn.jsdelivr.net/gh/Alanyaeer/ImgSummary@master/img/202312111855903.webp",
-            nickName: "wujj"
-        },
-        {
-            userId: "1324",
-            avatar: "https://cdn.jsdelivr.net/gh/Alanyaeer/ImgSummary@master/img/202312111855903.webp",
-            nickName: "wujj"
-        },
-        {
-            userId: "1324",
-            avatar: "https://cdn.jsdelivr.net/gh/Alanyaeer/ImgSummary@master/img/202312111855903.webp",
-            nickName: "wujj"
-        },
-        {
-            userId: "1324",
-            avatar: "https://cdn.jsdelivr.net/gh/Alanyaeer/ImgSummary@master/img/202312111855903.webp",
-            nickName: "wujj"
-        },
-    ]
+
 })
 </script>
 <template>
@@ -34,11 +14,13 @@ onMounted(() => {
             <div v-for="(item, index) in friendList" :key="item" style="display: flex; gap: 10px; align-items: center; padding: 0px 10px; width: 100%; position: relative;">
                 <a-avatar :size="20"><!-- 判断是否在线 -->
                     <img style="-webkit-filter: grayscale(50%);"
-                        src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
+                        :src="item.avatar"
                     />
                 </a-avatar>
                 <div>{{ item.nickName }}</div>
-                
+                <el-tag v-show="item.online === 1" type="success" effect="dark">在线</el-tag>
+                <el-tag v-show="item.online === 0" type="danger" effect="dark">下线</el-tag>
+                <!-- <el-tag type="danger" effect="dark">Tag 5</el-tag> -->
             </div>  
         </div>
     </div>

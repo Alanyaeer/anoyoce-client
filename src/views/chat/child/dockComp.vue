@@ -2,6 +2,13 @@
 import functionTab from '@/views/chat/child/functionTab.vue';
 import chatItem from '@/components/chatItem.vue'
 import searchBox from '@/components/searchBox.vue';
+import {ref, onMounted, computed} from 'vue'
+import { useRoomStore } from '@/stores'
+const roomStore = useRoomStore()
+const roomList = computed(() => roomStore.roomList)
+onMounted(async () => {
+    await roomStore.reloadRoomList()
+})
 </script>
 
 <template>
@@ -20,8 +27,9 @@ import searchBox from '@/components/searchBox.vue';
                 </a-button>
             </div>
             <div class="wrapperlist">
+                
                 <div style="display: flex; flex-direction: column;">
-                    <chatItem v-for="item in 12" class="wrapper" :key="item"></chatItem>
+                    <chatItem v-for="(item, index) in roomList" :roomInfo="item" :key="item.index" class="wrapper"></chatItem>
                 </div>
             </div>
         </div>

@@ -1,6 +1,14 @@
 <script setup>
-import {ref} from 'vue'
-const imgUrl = ref('https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg')
+import {ref, defineProps, computed} from 'vue'
+const props = defineProps(
+    {
+        roomInfo: {
+            type: Object,
+            required: true,
+        }
+    }
+)
+const roomInfoItem = computed(() => props.roomInfo)
 </script>
 
 <template>
@@ -8,7 +16,7 @@ const imgUrl = ref('https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c259411
         <div style="display: flex; align-items: center; gap: 1vw;">
             <div>
 
-                <el-avatar :size="45" :src="imgUrl" />
+                <el-avatar :size="45" :src="roomInfoItem?.roomAvatar" />
             </div>
             <!-- <img src="" > -->
             <div style="display: flex; flex-direction: column; gap: 1vh;">
