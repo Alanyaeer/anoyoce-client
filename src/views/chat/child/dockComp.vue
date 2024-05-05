@@ -63,10 +63,8 @@ const deb_searchContentFn = debounce(searchContentFn, 500)
 const addGroupFn = async() => {
     console.log('fajeifa');
     let fn =  picWithFunLoading(buttonLoading, roomStore.joinRoom)
-    let rep =  await fn(searchRoomInfo.value.id)
-    if(rep === 1){
-        roomStore.addRoomInView(searchRoomInfo.value)
-    }
+    await fn(searchRoomInfo.value.id, searchRoomInfo.value)
+    
 }
 const showTheConfirmDialogFn = () => {
     // 让他显示出来
@@ -142,6 +140,9 @@ onMounted(async () => {
                     <template #default>
                         <div style="display: flex; flex-direction: column; position: relative; width: 95%;   overflow: hidden;">
                             <chatItem v-for="(item, index) in roomList" @click="choseRoom(index)"  :index="index" :roomInfo="item" :key="item.index" class="wrapper wrapperclick"></chatItem>
+                            <div v-if="roomList === null || roomList.length=== 0 || roomList === undefined">
+                                <a-empty>暂无添加任何群号</a-empty>
+                            </div>
                         </div>
                     </template>
                 </el-skeleton>
