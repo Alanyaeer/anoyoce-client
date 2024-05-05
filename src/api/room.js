@@ -39,3 +39,10 @@ export const addRoom = (params) => {
         params: params
     })
 }
+export const queryRoom = (params) => {
+    return axios({
+        method: 'get',
+        baseURL: `${baseUrl}/api/room/query/roomId`,
+        params: params
+    })
+}

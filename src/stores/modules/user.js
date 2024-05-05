@@ -14,6 +14,7 @@ export const useUserInfoStore = defineStore(
         }
         /**
          * 这个
+         * 1 代表上线， 0代表下线 
          */
         const changeUserOnlineStatus = (onlineStatus) => {
             userInfo.value.online = onlineStatus

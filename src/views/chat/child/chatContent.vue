@@ -1,13 +1,22 @@
 <script setup>
 import {ref, watch} from 'vue'
+import {insertAddChatInfo} from '@/api/chat'
+import {useRoomStore} from '@/stores'
 const sendLoading = ref(false)
 const sendContent = ref('')
 const sendDisabled = ref(true)
-const handleClick = () =>{
+const roomStore = useRoomStore()
+const handleClick = async() =>{
     sendLoading.value = true;
-    setTimeout(() => {
-        sendLoading.value = false
-    }, 3000);
+    let requestParams = {
+        "roomId": roomStore?.currentRoomId
+    }
+    let requestBody = {
+
+    }   
+    // 插入消息记录
+    await insertAddChatInfo(requestParams, requestBody)
+    sendLoading.value = false
 }
 const changeSendStatus = () =>{
     if(sendContent.value.length > 0) sendDisabled.value = false;

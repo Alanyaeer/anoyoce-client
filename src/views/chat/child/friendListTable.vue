@@ -21,7 +21,7 @@ onMounted(() => {
                     </div>
                 </template>
                 <template #default> 
-                    <div v-for="(item, index) in sortedFriendList" class="wrapper" :key="item" style="display: flex; gap: 10px; align-items: center; padding: 0px 10px; width: 100%; position: relative;">
+                    <div v-for="(item, index) in sortedFriendList" class="wrapper" :key="item" style="display: flex; gap: 10px; align-items: center; padding: 5px 10px; width: 88%; border-radius: 5px; position: relative;">
                         <a-avatar :size="25"><!-- 判断是否在线 -->
                             <img style="-webkit-filter: grayscale(50%);"
                                 :src="item.avatar"
@@ -34,6 +34,7 @@ onMounted(() => {
                 </template>
             </el-skeleton>
         </div>
+        
     </div>
 </template>
 
@@ -49,6 +50,7 @@ onMounted(() => {
         gap: 10px;
         overflow: hidden;
         flex-direction: column;
+        align-items: center;
         .wrapper{
             background-color: none;
             transition: 0.5s;

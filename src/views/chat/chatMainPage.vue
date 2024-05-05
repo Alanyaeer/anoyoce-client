@@ -8,7 +8,6 @@ const userInfoStore = useUserInfoStore()
 const token = localStorage.getItem("token")
 let socket;
 import {ref, onMounted} from 'vue'; 
-import { checkboxGroupEmits } from 'element-plus';
 const userSocketInit = () => {
     // let socketUrl = 'ws://localhost:8080/imserver/' + token    
     // // 关闭之前的连接防止出现问题
@@ -90,6 +89,8 @@ const userSocketInit = () => {
     }
     socket.onclose = (e)=> {
       console.log('websocket关闭', e.code+ ' '+e.reason+' ' + e.wasClean)
+      // 切换用户状态
+      userInfoStore.changeUserOnlineStatus(0);
       // eslint-disable-next-line no-undef
       ElMessage('websocket关闭')
     }

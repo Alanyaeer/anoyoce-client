@@ -2,6 +2,7 @@
 import {ref, onMounted, computed} from 'vue'
 import TvError from '@/components/TvError.vue';
 import friendListTable from '@/views/chat/child/friendListTable.vue'
+import chatLoader from '@/components/chatLoader.vue';
 import {useRoomStore, useUserInfoStore} from '@/stores'
 import {formatDate} from '@/utils/dayUtils'
 const roomStore = useRoomStore()
@@ -9,6 +10,7 @@ const userInfoStore = useUserInfoStore()
 const roomType = ref(1)
 const chatList = computed(() => roomStore.chatInfoList)
 const myUserInfo = computed(() => userInfoStore.userInfo.id)
+const loading = computed(() => roomStore.chatLoading)
 onMounted(() => {
 })
 </script>
@@ -16,59 +18,68 @@ onMounted(() => {
 <template>
     <div class="container">
         <div class="leftWindow">
-            <div v-for="(item, index) in chatList" :key="item">
-                <div v-if="item?.pid === myUserInfo?.id" class="chatme">
-                    <div class="chat-text">
-                        {{ item?.message }}
+            <el-skeleton style="position: relative; height: 100%;" :loading="loading" animated>
+                <template #template>
+                    <div style="display: flex; position: relative; top: 45%; left: 50%; translate: 0% -50%">
+                        <chatLoader></chatLoader>
                     </div>
-                    <div class="info-time ">
-                        <span style="position: relative; right: 12px;">{{ formatDate(item?.createTime) }}</span>
-                        <el-popover
-                                :width="250"
-                                popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px; border-radius: 10px;"
-                            >
-                            <template #reference>
-                                <img :src="item?.userInfo?.avatar" alt="" />
-                            </template>
-                            <template #default>
-                                <div style="padding: 10px; display: flex;justify-content: center; align-items: center; display: flex; flex-direction: column;">
-                                    <el-avatar shape="square" :size="84" :src="item?.userInfo?.avatar" />
-                                    <span style="margin-top: 10px;">{{ item?.userInfo?.nickName }}</span>
-                                </div>
-                            </template>
-                        </el-popover>
-                        
+                </template>
+                <template #default>
+                    <div v-for="(item, index) in chatList" :key="item">
+                        <div v-if="item?.pid === myUserInfo?.id" class="chatme">
+                            <div class="chat-text">
+                                {{ item?.message }}
+                            </div>
+                            <div class="info-time ">
+                                <span style="position: relative; right: 12px;">{{ formatDate(item?.createTime) }}</span>
+                                <el-popover
+                                        :width="250"
+                                        popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px; border-radius: 10px;"
+                                    >
+                                    <template #reference>
+                                        <img :src="item?.userInfo?.avatar" alt="" />
+                                    </template>
+                                    <template #default>
+                                        <div style="padding: 10px; display: flex;justify-content: center; align-items: center; display: flex; flex-direction: column;">
+                                            <el-avatar shape="square" :size="84" :src="item?.userInfo?.avatar" />
+                                            <span style="margin-top: 10px;">{{ item?.userInfo?.nickName }}</span>
+                                        </div>
+                                    </template>
+                                </el-popover>
+                                
+                            </div>
+                        </div>
+                        <div v-else class="chatfriend">
+                            <div class="chat-text">
+        
+                                {{ item.msg }}
+                            </div>
+                            <div class="info-time">
+                                <el-popover
+                                        :width="250"
+                                        popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px;  border-radius: 10px;"
+                                    >
+                                    <template #reference>
+                                        <img :src="item.avatar" alt="" />
+                                    </template>
+                                    <template #default>
+                                        <div style="padding: 10px; display: flex; justify-content: center; align-items: center; display: flex; flex-direction: column;">
+                                            <el-avatar shape="square" :size="84" :src="item.avatar" />
+                                            <span style="margin-top: 10px;">{{ item.name }}</span>
+                                        </div>
+                                    </template>
+                                </el-popover>
+                                <span >{{ item.createTime }}</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div v-else class="chatfriend">
-                    <div class="chat-text">
-
-                        {{ item.msg }}
+                    <div v-if="chatList.length === 0" style="display: flex; position: relative; top: 50%; translate: 0% -50%">
+                        <a-empty >
+                            暂无聊天记录
+                        </a-empty>
                     </div>
-                    <div class="info-time">
-                        <el-popover
-                                :width="250"
-                                popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px;  border-radius: 10px;"
-                            >
-                            <template #reference>
-                                <img :src="item.avatar" alt="" />
-                            </template>
-                            <template #default>
-                                <div style="padding: 10px; display: flex; justify-content: center; align-items: center; display: flex; flex-direction: column;">
-                                    <el-avatar shape="square" :size="84" :src="item.avatar" />
-                                    <span style="margin-top: 10px;">{{ item.name }}</span>
-                                </div>
-                            </template>
-                        </el-popover>
-                        <span >{{ item.createTime }}</span>
-                    </div>
-                </div>
-            </div>
-            <div v-if="chatList.length === 0" style="display: flex; position: relative; top: 50%; translate: 0% -50%">
-                <a-empty >
-                    暂无聊天记录
-                </a-empty>
-            </div>
+                </template>
+            </el-skeleton>
         </div>
         <div class="rightCard">
             <div class="rightTop" v-if="roomType===1">
@@ -88,11 +99,13 @@ onMounted(() => {
     display: flex;  
     width: 100%;
     height: 100%;
+    overflow-y: hidden;
     .leftWindow{
         padding: 3vh 1.5vw;
         display: flex;
         position: relative;
         width: calc(100% - 20vw - 2px);
+        height: 100%;
         word-break: break-all;
         flex-direction: column;
         background-color: #F2F2F2;

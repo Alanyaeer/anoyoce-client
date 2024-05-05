@@ -1,15 +1,17 @@
 import { defineStore } from "pinia";
 import {ref, watch, computed} from 'vue'
-import {queryRoomUserAdd, insertRoom, queryRoomUser}  from '@/api/room'
+import {queryRoomUserAdd, insertRoom, queryRoomUser,addRoom}  from '@/api/room'
 import { queryChatInfoList} from '@/api/chat'
 export const useRoomStore = defineStore(
     'room-info',
     () => {
         const currentRoomIndex = ref(0)
+        const currentRoomId = ref(0)
         const roomList = ref([])
         const roomUserList = ref([])
         const chatInfoList = ref([])
         const loading = ref(false)
+        const chatLoading = ref(false)
         // 管理一个根据 在线状态进行排序的 friendList
         const sortedFriendList =  computed(() => {
             return roomUserList.value.sort((a, b) => {
@@ -29,8 +31,10 @@ export const useRoomStore = defineStore(
                 window.alert('出现错误')
                 return ;
             }
-            else currentRoomIndex.value = id
-            console.log(currentRoomIndex.value);
+            else {
+                currentRoomIndex.value = id
+                currentRoomId.value = roomList.value[id]
+            }
         }
         const getCurrentRoomIndex = () => currentRoomIndex;
         const reloadRoomList = async () => {
@@ -41,11 +45,11 @@ export const useRoomStore = defineStore(
             await  updateTheRoomUserList()
         }
         /**
-         * 插入房间号
+         * 这个是创建一个房间号
          * @param {房间号的名字} roomName 
          * @param {房间号的根id, 没有根的话就是给一个""} rootRootId 
          */
-        const addRoom = async (roomName , rootRootId) => {
+        const createRoom = async (roomName , rootRootId = "") => {
             // roomList.value.push(roomItem)
 
             let params = {
@@ -59,6 +63,28 @@ export const useRoomStore = defineStore(
             else{
                 window.alert('请求失败')
             }
+            return rep.data
+        }
+        /**
+         * 
+         * @param {房间号的id} roomId 
+         */
+        const joinRoom = async (roomId) => {
+            let request = {
+                "roomId": roomId
+            }
+            let rep =  await addRoom(request)
+            if(rep.code === 200)return rep.data
+            else {
+                window.alert("你已经加入这个房间了")
+            }
+        }   
+        /**
+         * 
+         * @param {房间号的信息} roomInfo 
+         */
+        const addRoomInView = (roomInfo) => {
+            roomList.value.push(roomInfo)
         }
         const getRoomList = () => {
             return roomList;
@@ -68,6 +94,7 @@ export const useRoomStore = defineStore(
          */
         const updateTheRoomUserList = async () => {
             loading.value = true
+            chatLoading.value = true
             let currentRoomId = roomList.value[currentRoomIndex.value].id
             let params = {
                 roomId: currentRoomId
@@ -82,18 +109,23 @@ export const useRoomStore = defineStore(
                 if(chatRepList.code === 200){
                     chatInfoList.value = chatRepList.data
                 }
+                else{
+                    window.alert("请求失败")
+                }
             }   
             else {
                 window.alert("请求失败")
             }
             setTimeout(() => {
-                
                 loading.value = false
             }, 1000);
+            setTimeout(() => {
+                chatLoading.value = false
+            }, 500)
         }
         watch(() => currentRoomIndex.value, 
                 () => updateTheRoomUserList(),
             )
-        return {setCurrentRoomIndex, getCurrentRoomIndex , currentRoomIndex, reloadRoomList, addRoom, getRoomList, roomList,  roomUserList, loading, chatInfoList, sortedFriendList}
+        return {setCurrentRoomIndex, getCurrentRoomIndex , currentRoomIndex, currentRoomId, addRoomInView ,joinRoom, reloadRoomList, createRoom, getRoomList, roomList,  roomUserList,chatLoading, loading, chatInfoList, sortedFriendList}
     }
 )

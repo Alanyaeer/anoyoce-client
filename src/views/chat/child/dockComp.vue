@@ -2,15 +2,36 @@
 import functionTab from '@/views/chat/child/functionTab.vue';
 import chatItem from '@/components/chatItem.vue'
 import {ref, onMounted, computed, watch} from 'vue'
+// import {picWithFunLoading} from '@/utils/loading.ts'
+import {debounce} from '@/utils/optimizeUtils.ts'
+import {picWithFunLoading} from '@/utils/loading'
 import { useRoomStore } from '@/stores'
+import {queryRoom} from '@/api/room'
+import { ElMessage } from 'element-plus';
 const roomStore = useRoomStore()
 const loading = ref(true)
+const searchRoomInfo = ref()
+const buttonLoading = ref(false)
 const roomList = computed(() => roomStore.roomList)
+const searchContent = ref('')
 const currentChoseRoomIndex = computed(() => roomStore.currentRoomIndex)
+const confirmDialogVisible = ref(false)
+let tryTimes = 10
 const choseRoom = (index) => {
     // 如果存在
     if(currentChoseRoomIndex.value !== undefined){
         let olddiv =  document.getElementsByClassName("wrapperclick")[currentChoseRoomIndex.value]
+        // 在第一次操作的时候 多次尝试 知道可以第一个div 出现
+        if(olddiv === undefined){
+            setTimeout(() => {
+                tryTimes -= 1
+                // 如果大于等于 0 还可以继续尝试否则不在尝试
+                if(tryTimes >= 0)
+                    choseRoom(0)
+                
+            }, 200)
+            return 
+        }
         // 之前的删除 
         olddiv.style.backgroundColor = '#ffffff'
         olddiv.style.color = '#1F2329'
@@ -21,24 +42,87 @@ const choseRoom = (index) => {
     div.style.color = '#1456F0'
     roomStore.setCurrentRoomIndex(index)
 }
+const searchContentFn = async() => {
+    let request = {
+        "roomId": searchContent.value
+    }
+    let rep =  await queryRoom(request)
+    //响应成功
+    if(rep.code === 200){
+        searchRoomInfo.value = rep.data
+    }
+    else {
+        ElMessage("暂无该群聊id")
+    }
+    
+}
+const deb_searchContentFn = debounce(searchContentFn, 500)
+/**
+ * 这里存在bug 需要被修复
+ */
+const addGroupFn = async() => {
+    console.log('fajeifa');
+    let fn =  picWithFunLoading(buttonLoading, roomStore.joinRoom)
+    let rep =  await fn(searchRoomInfo.value.id)
+    if(rep === 1){
+        roomStore.addRoomInView(searchRoomInfo.value)
+    }
+}
+const showTheConfirmDialogFn = () => {
+    // 让他显示出来
+    confirmDialogVisible.value = true
+}
+watch(() => searchContent.value,
+    () => deb_searchContentFn(),
+)
 onMounted(async () => {
     loading.value = true
     await roomStore.reloadRoomList()
     loading.value = false   
-    // choseRoom(0)
+    choseRoom(0)
 })
 </script>
 
 <template>
     <div class="container">
+        <el-dialog v-model="confirmDialogVisible" title="Warning" width="500" center>
+            <span>
+            It should be noted that the content will not be aligned in center by
+            default
+            </span>
+            <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="confirmDialogVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="confirmDialogVisible = false">
+                Confirm
+                </el-button>
+            </div>
+            </template>
+        </el-dialog>
         <div class="container-left">
             <functionTab></functionTab>
         </div>
         <div class="container-right">
             <div class="wrapperlist" style="padding: 10px 0px; display: flex; justify-content: center; gap: 10px;">
-                <a-input-search style="position: relative; width: 80%;" placeholder="添加群聊" loading search-button/>
+                <a-trigger   position="top" auto-fit-position :unmount-on-close="false" >
+                    <a-input-search v-model="searchContent" style="position: relative; width: 80%;" placeholder="添加群聊" search-button/>
+                    <template #content>
+                        <div style="display: flex; position: relative; padding: 5px;  height: calc(25vh- 10px); width: calc(15vw - 10px); background-color: #F7F9FC; overflow: hidden;">
+                            <div v-if="searchRoomInfo !== undefined && searchRoomInfo !== null" style="display: flex; gap: 5px; position: relative; flex-direction: column;justify-content: center; left: 5vw;" >
+                                <a-avatar :size="64" shape="square">
+                                    <img :src="searchRoomInfo?.roomAvatar">
+                                </a-avatar>
+                                <div>{{ searchRoomInfo?.roomName }}</div>
+                                <a-button :loading="buttonLoading" style="position: relative;" type="primary" @click="addGroupFn()">添加房间号</a-button>
+                            </div> 
+                            <div v-else style="display: flex; flex-direction: column;justify-content: center; width: 100%;">
+                                <a-empty></a-empty>
+                            </div>
+                        </div>
+                    </template>
+                </a-trigger>    
                 <!-- 添加东西 -->
-                <a-button type="primary">
+                <a-button @click="showTheConfirmDialogFn()"  type="primary">
                     <template #icon>
                         <icon-plus />
                     </template>
@@ -92,15 +176,17 @@ onMounted(async () => {
                 width: 100%;
                 justify-content: center;
                 height: auto;
+
                 .wrapper{
                     overflow: auto;
                     transition: 0.5s;
                 }
                 .wrapperclick{
                     display: flex;
+                    color: #1F2329;
                 }
                 .wrapperclick:hover{
-                    background-color: #F5F5F5;
+                    background-color: #E4E6E7;
 
                 }
             }

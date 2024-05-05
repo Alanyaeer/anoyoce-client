@@ -39,11 +39,11 @@ onMounted(async () => {
                 </a-avatar>
             </template>
         </el-skeleton>
-        <div v-if="userInfo?.online === 1" style="border-radius: 1000px; position: absolute; display: flex; left: 55%; top: 6.7%;  width: 15px; height: 15px; justify-content: center; align-items: center; background-color:  white;">
+        <div v-if="userInfo?.online === 1" style="border-radius: 1000px; position: absolute; display: flex; left: 55%; top: 7%;  width: 15px; height: 15px; justify-content: center; align-items: center; background-color:  white;">
             <div style="border-radius: 1000px; background-color: #35EE8E; width: 12px; height: 12px;"></div>
         </div>
-        <div v-else style="border-radius: 1000px; position: absolute; display: flex; left: 55%; top: 6.7%;  width: 15px; height: 15px; justify-content: center; align-items: center; background-color:  white;">
-            <div style="border-radius: 1000px; background-color: #C44522; width: 12px; height: 12px;"></div>
+        <div v-else style="border-radius: 1000px; position: absolute; display: flex; left: 55%; top: 7%;  width: 15px; height: 15px; justify-content: center; align-items: center; background-color:  white;">
+            <div style="border-radius: 1000px; background-color: rgb(245 74 27); width: 12px; height: 12px;"></div>
         </div>
         <div class="wrapper">
             <div class="wrapper-item" @click="changeStatus(0)">
