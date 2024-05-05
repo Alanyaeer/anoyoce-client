@@ -4,6 +4,7 @@ import {useUserInfoStore} from '@/stores';
 const userInfoStore = useUserInfoStore()
 const status = ref(0)
 const userInfo = computed(() => userInfoStore.userInfo)
+const loading = computed(() => userInfoStore.laodingStatus)
 const changeStatus = (currentStatus) => {
     // 之前的 清理 
     let olddiv = document.getElementsByClassName("wrapper-item")[status.value]
@@ -27,14 +28,22 @@ onMounted(async () => {
 
 <template>
     <div class="container">
-        <a-avatar :src="userInfo?.avatar" :style="{ backgroundColor: '#14a9f8' }">
-            {{ userInfo?.nickName }}
-        </a-avatar>
+        <el-skeleton :loading="loading" animated>
+            <template #template>
+                <el-skeleton-item variant="image" style="left: 8px; position: relative; width: 45px; height: 45px; border-radius: 60px;">
+                </el-skeleton-item>
+            </template>
+            <template #default>
+                <a-avatar :src="userInfo?.avatar" :style="{ backgroundColor: '#14a9f8' }">
+                    {{ userInfo?.nickName }}
+                </a-avatar>
+            </template>
+        </el-skeleton>
         <div v-if="userInfo?.online === 1" style="border-radius: 1000px; position: absolute; display: flex; left: 55%; top: 6.7%;  width: 15px; height: 15px; justify-content: center; align-items: center; background-color:  white;">
             <div style="border-radius: 1000px; background-color: #35EE8E; width: 12px; height: 12px;"></div>
         </div>
         <div v-else style="border-radius: 1000px; position: absolute; display: flex; left: 55%; top: 6.7%;  width: 15px; height: 15px; justify-content: center; align-items: center; background-color:  white;">
-            <div style="border-radius: 1000px; background-color: #8E35EE; width: 12px; height: 12px;"></div>
+            <div style="border-radius: 1000px; background-color: #C44522; width: 12px; height: 12px;"></div>
         </div>
         <div class="wrapper">
             <div class="wrapper-item" @click="changeStatus(0)">

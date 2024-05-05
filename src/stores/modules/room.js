@@ -9,6 +9,7 @@ export const useRoomStore = defineStore(
         const roomList = ref([])
         const roomUserList = ref([])
         const chatInfoList = ref([])
+        const loading = ref(false)
         // 管理一个根据 在线状态进行排序的 friendList
         const sortedFriendList =  computed(() => {
             return roomUserList.value.sort((a, b) => {
@@ -29,6 +30,7 @@ export const useRoomStore = defineStore(
                 return ;
             }
             else currentRoomIndex.value = id
+            console.log(currentRoomIndex.value);
         }
         const getCurrentRoomIndex = () => currentRoomIndex;
         const reloadRoomList = async () => {
@@ -65,6 +67,7 @@ export const useRoomStore = defineStore(
          * 更新房间号
          */
         const updateTheRoomUserList = async () => {
+            loading.value = true
             let currentRoomId = roomList.value[currentRoomIndex.value].id
             let params = {
                 roomId: currentRoomId
@@ -83,11 +86,14 @@ export const useRoomStore = defineStore(
             else {
                 window.alert("请求失败")
             }
-
+            setTimeout(() => {
+                
+                loading.value = false
+            }, 1000);
         }
         watch(() => currentRoomIndex.value, 
                 () => updateTheRoomUserList(),
             )
-        return {setCurrentRoomIndex, getCurrentRoomIndex , reloadRoomList, addRoom, getRoomList, roomList,  roomUserList, chatInfoList, sortedFriendList}
+        return {setCurrentRoomIndex, getCurrentRoomIndex , currentRoomIndex, reloadRoomList, addRoom, getRoomList, roomList,  roomUserList, loading, chatInfoList, sortedFriendList}
     }
 )

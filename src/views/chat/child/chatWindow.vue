@@ -2,12 +2,13 @@
 import {ref, onMounted, computed} from 'vue'
 import TvError from '@/components/TvError.vue';
 import friendListTable from '@/views/chat/child/friendListTable.vue'
-import {useRoomStore} from '@/stores'
+import {useRoomStore, useUserInfoStore} from '@/stores'
 import {formatDate} from '@/utils/dayUtils'
 const roomStore = useRoomStore()
-const test = ref("1");
+const userInfoStore = useUserInfoStore()
 const roomType = ref(1)
 const chatList = computed(() => roomStore.chatInfoList)
+const myUserInfo = computed(() => userInfoStore.userInfo.id)
 onMounted(() => {
 })
 </script>
@@ -16,7 +17,7 @@ onMounted(() => {
     <div class="container">
         <div class="leftWindow">
             <div v-for="(item, index) in chatList" :key="item">
-                <div v-if="item?.pid === myId" class="chatme">
+                <div v-if="item?.pid === myUserInfo?.id" class="chatme">
                     <div class="chat-text">
                         {{ item?.message }}
                     </div>

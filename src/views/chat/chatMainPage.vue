@@ -90,11 +90,12 @@ const userSocketInit = () => {
     }
     socket.onclose = (e)=> {
       console.log('websocket关闭', e.code+ ' '+e.reason+' ' + e.wasClean)
-      window.alert('websocket关闭')
+      // eslint-disable-next-line no-undef
+      ElMessage('websocket关闭')
     }
     socket.onerror =  ()=> {
-      console.log('websocket发送错误', );
-      window.alert('websocket发送错误')
+      // eslint-disable-next-line no-undef
+      ElMessage.error('websocket发送错误')
     }
 }
 onMounted(async () => {

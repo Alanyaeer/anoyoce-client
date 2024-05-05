@@ -35,7 +35,7 @@ const roomInfoItem = computed(() => props.roomInfo)
 
 <style lang="scss" scoped>
 .container{
-    background-color: FFFFFF;
+    background-color: #FFFFFF;
     position: relative;
     display: flex;
     width: 100%;

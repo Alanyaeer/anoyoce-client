@@ -5,6 +5,7 @@ export const useUserInfoStore = defineStore(
     'user-info',
     ()=>{
         const userInfo = ref();
+        const laodingStatus = ref(true)
         const setUserInfo = (obj) => {
             userInfo.value = obj
         }
@@ -18,11 +19,13 @@ export const useUserInfoStore = defineStore(
             userInfo.value.online = onlineStatus
         }
         const reloadUserInfo = async () => {
+            laodingStatus.value = true
             let rep =  await queryUser()
             if(rep.code === 200){
                 setUserInfo(rep.data)
+                laodingStatus.value = false
             }
         }
-        return {userInfo, setUserInfo, getUserInfo, reloadUserInfo, changeUserOnlineStatus}
+        return {userInfo, setUserInfo, getUserInfo, reloadUserInfo, changeUserOnlineStatus, laodingStatus}
     }
 )
