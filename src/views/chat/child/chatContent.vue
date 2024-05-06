@@ -1,30 +1,103 @@
 <script setup>
-import {ref, watch} from 'vue'
+import {ref, watch, onMounted, computed} from 'vue'
 import {insertAddChatInfo} from '@/api/chat'
 import {useRoomStore} from '@/stores'
+import {formatDate} from '@/utils/dayUtils'
+import { ElMessage } from 'element-plus';
 const sendLoading = ref(false)
 const sendContent = ref('')
 const sendDisabled = ref(true)
+const token = localStorage.getItem("token")
 const roomStore = useRoomStore()
+const currentRoomId = computed(() => roomStore?.roomId)
+let socket;
+const sendSocket = (message)=>{
+    let packMsg = {
+        "message":message,
+        "type": "chat",
+        "token": token
+    }
+    socket.send(JSON.stringify(packMsg))
+}   
 const handleClick = async() =>{
     sendLoading.value = true;
     let requestParams = {
-        "roomId": roomStore?.currentRoomId
+        "roomId": currentRoomId.value
     }
     let requestBody = {
-
+        "messageType": 0,
+        "roomId": currentRoomId.value,
+        "message": sendContent.value,
+        "anonymous": 0,
+        "messageExtension": null,
+        "createTime": formatDate(new Date())
     }   
+    sendSocket(requestBody)
     // 插入消息记录
     await insertAddChatInfo(requestParams, requestBody)
+    roomStore
+    //清空
+    sendContent.value = ""
     sendLoading.value = false
 }
 const changeSendStatus = () =>{
     if(sendContent.value.length > 0) sendDisabled.value = false;
     else sendDisabled.value = true
 }
+// 初始化房间号socket 连接
+const initRoomSocket = () => {
+    // 避免房间号没有加载出来， 这里提供了一个重试的方法
+    if(currentRoomId.value === undefined || currentRoomId.value === 0){
+        setTimeout(() => {
+            if(socket === null)
+            initRoomSocket();
+        }, 300)
+        return ;
+    }
+    let socketUrl = "ws://localhost:8088/room/" + currentRoomId.value
+    if(socket != null){
+        console.log(socket);
+        socket.close()
+        socket = null
+    }
+    socket = new WebSocket(socketUrl, [token])
+    socket.onopen = function () {
+        console.log("websocket已打开!");
+        
+    };
+    /**
+     * @param {*} msg 
+     */
+    socket.onmessage = function (msg) {
+        if(msg === ""){
+            console.log('保持连接测试');
+            return 
+        }
+      console.log("收到数据====" + msg.data)
+      let data = JSON.parse(msg.data)  // 对收到的json数据进行解析， 类似这样的： {"users": [{"username": "zhang"},{ "username": "admin"}]}
+      console.log(data);
+      
+    }
+    socket.onclose = (e)=> {
+        console.log('websocket关闭', e.code+ ' '+e.reason+' ' + e.wasClean)
+        // 切换用户状态
+      // eslint-disable-next-line no-undef
+      ElMessage('websocket关闭')
+    }
+    socket.onerror =  ()=> {
+        // eslint-disable-next-line no-undef
+        ElMessage.error('websocket发送错误')
+    }
+}
 watch(() => sendContent,
 () => changeSendStatus(), 
 {deep: true});
+watch(() => currentRoomId.value,
+() => initRoomSocket(),
+{immediate:true})
+onMounted(() => {
+
+})
 </script>
 <template>
     <div class="container">

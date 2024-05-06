@@ -71,16 +71,20 @@ const showTheConfirmDialogFn = () => {
     // 让他显示出来
     confirmDialogVisible.value = true
 }
-const form = reactive({//创建群聊表单
-  name: '',
+const form = ref({//创建群聊表单
+  roomName: '快乐的一家人',
   id: '',
   desc: '',
 })
-const checkName = (name) =>{
-    if(!name.trim()){
-        alert("请输入群聊名称")
+const createRoom = () =>{
+    var name = form.value.roomName
+    if(name === undefined ||  name.trim().length === 0 ){
+        ElMessage("请输入群名称")
     }
-    else{//表单消失
+    else{
+        // 创建房间
+        roomStore.createRoom(name)
+        //表单消失
         confirmDialogVisible.value = false
     }
 }
@@ -99,21 +103,21 @@ onMounted(async () => {
 <template>
     <div class="container">
         <el-dialog v-model="confirmDialogVisible" title="发起群聊" width="500" center>
-            <el-form :model="form" label-width="auto" style="max-width: 600px">
+            <el-form :model="form" label-width="auto" style="max-width: 600px;display: flex; flex-direction: column;  gap: 10px;">
                 <div class="form-row">
-                    <img src="###" title="群聊头像" alt="群聊头像" class="avatar" />
+                    <a-avatar style="margin-right: 10px; margin-bottom: 5px; position: relative; left: 10px; background-color: #00d0b6;" :size="80" shape="square">{{form.roomName}}</a-avatar>
                     <el-form-item label="群聊名称" class="form-item">
-                        <el-input v-model="form.name" placeholder="请输入群聊名称" />
+                        <el-input v-model="form.roomName" placeholder="请输入群聊名称" />
                     </el-form-item>
                 </div>
                 <el-form-item label="群聊id">
-                    <el-input v-model="form.id" placeholder="用户可通过id加入群聊" disabled/>
+                    <el-input v-model="form.id" placeholder="由后台自动生成" disabled/>
                 </el-form-item>
                 <el-form-item label="群公告">
                     <el-input v-model="form.desc" type="textarea" placeholder="初始化群公告"/>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="checkName(form.name)">创建</el-button>
+                    <el-button type="primary" @click="createRoom(form.name)">创建</el-button>
                     <el-button @click="confirmDialogVisible = false">取消</el-button>
                 </el-form-item>
             </el-form>
@@ -129,7 +133,8 @@ onMounted(async () => {
                         <div style="display: flex; position: relative; padding: 5px;  height: calc(25vh- 10px); width: calc(15vw - 10px); background-color: #F7F9FC; overflow: hidden;">
                             <div v-if="searchRoomInfo !== undefined && searchRoomInfo !== null" style="display: flex; gap: 5px; position: relative; flex-direction: column;justify-content: center; left: 5vw;" >
                                 <a-avatar :size="64" shape="square">
-                                    <img :src="searchRoomInfo?.roomAvatar">
+                                    <img v-if="searchRoomInfo?.roomAvatar!==null && searchRoomInfo?.roomAvatar !== undefined" :src="searchRoomInfo?.roomAvatar" />
+                                    <span v-else>{{ searchRoomInfo?.roomName }}</span>
                                 </a-avatar>
                                 <div>{{ searchRoomInfo?.roomName }}</div>
                                 <a-button :loading="buttonLoading" style="position: relative;" type="primary" @click="addGroupFn()">添加房间号</a-button>
@@ -215,6 +220,7 @@ onMounted(async () => {
         }   
         .form-row {
             display: flex;
+            gap: 10px  ;
             align-items: center;
         }
         .avatar {

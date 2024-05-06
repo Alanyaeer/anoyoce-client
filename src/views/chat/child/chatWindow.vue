@@ -26,7 +26,7 @@ onMounted(() => {
                 </template>
                 <template #default>
                     <div v-for="(item, index) in chatList" :key="item">
-                        <div v-if="item?.pid === myUserInfo?.id" class="chatme">
+                        <div v-if="item?.self === 1" class="chatme">
                             <div class="chat-text">
                                 {{ item?.message }}
                             </div>
@@ -51,8 +51,7 @@ onMounted(() => {
                         </div>
                         <div v-else class="chatfriend">
                             <div class="chat-text">
-        
-                                {{ item.msg }}
+                                {{ item?.message }}
                             </div>
                             <div class="info-time">
                                 <el-popover
@@ -60,16 +59,16 @@ onMounted(() => {
                                         popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px;  border-radius: 10px;"
                                     >
                                     <template #reference>
-                                        <img :src="item.avatar" alt="" />
+                                        <img :src="item?.userInfo?.avatar" alt="" />
                                     </template>
                                     <template #default>
                                         <div style="padding: 10px; display: flex; justify-content: center; align-items: center; display: flex; flex-direction: column;">
-                                            <el-avatar shape="square" :size="84" :src="item.avatar" />
-                                            <span style="margin-top: 10px;">{{ item.name }}</span>
+                                            <el-avatar shape="square" :size="84" :src="item?.userInfo?.avatar" />
+                                            <span style="margin-top: 10px;">{{ item?.userInfo?.nickName }}</span>
                                         </div>
                                     </template>
                                 </el-popover>
-                                <span >{{ item.createTime }}</span>
+                                <span >{{  formatDate(item?.createTime) }}</span>
                             </div>
                         </div>
                     </div>

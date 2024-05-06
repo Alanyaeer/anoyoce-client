@@ -8,6 +8,12 @@ const loading = computed(() => userInfoStore.laodingStatus)
 const changeStatus = (currentStatus) => {
     // 之前的 清理 
     let olddiv = document.getElementsByClassName("wrapper-item")[status.value]
+    if(olddiv === undefined || olddiv === null){
+        setTimeout(() => {
+            changeStatus(currentStatus)
+        }, 300)
+        return ;
+    }
     olddiv.style.backgroundColor = '#DEE5F5'
     olddiv.style.color='#2D3548'
     let div = document.getElementsByClassName("wrapper-item")[currentStatus]

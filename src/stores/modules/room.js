@@ -8,6 +8,7 @@ export const useRoomStore = defineStore(
     () => {
         const currentRoomIndex = ref(0)
         const currentRoomId = ref(0)
+        const roomId = ref(0)
         const roomList = ref([])
         const roomUserList = ref([])
         const chatInfoList = ref([])
@@ -35,6 +36,7 @@ export const useRoomStore = defineStore(
             else {
                 currentRoomIndex.value = id
                 currentRoomId.value = roomList.value[id]
+                roomId.value = currentRoomId.value.id
             }
         }
         const getCurrentRoomIndex = () => currentRoomIndex;
@@ -62,6 +64,7 @@ export const useRoomStore = defineStore(
             let rep = await insertRoom(params)
             if(rep.code === 200){
                 roomList.value.push(rep.data)
+
             }
             else{
                 window.alert('请求失败')
@@ -133,9 +136,12 @@ export const useRoomStore = defineStore(
                 chatLoading.value = false
             }, 500)
         }
+        const addMsgInChatInfoList = (msg) => {
+            chatInfoList.value.push(msg) 
+        }   
         watch(() => currentRoomIndex.value, 
                 () => updateTheRoomUserList(),
             )
-        return {setCurrentRoomIndex, getCurrentRoomIndex , currentRoomIndex, currentRoomId, addRoomInView ,joinRoom, reloadRoomList, createRoom, getRoomList, roomList,  roomUserList,chatLoading, loading, chatInfoList, sortedFriendList}
+        return {setCurrentRoomIndex,addMsgInChatInfoList, getCurrentRoomIndex , currentRoomIndex, currentRoomId,roomId, addRoomInView ,joinRoom, reloadRoomList, createRoom, getRoomList, roomList,  roomUserList,chatLoading, loading, chatInfoList, sortedFriendList}
     }
 )

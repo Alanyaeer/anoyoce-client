@@ -2,6 +2,7 @@
 <script setup>
 import { ref , onMounted} from 'vue';
 import {getLogin, register} from '@/api/user'
+import { ElMessage } from 'element-plus';
 
 const loading = ref(false)
 const form = ref({});
@@ -40,13 +41,21 @@ const login = async () => {
   // form 就是我们传入的数据
   loading.value = true
   let rep = await getLogin({...form.value})
-  console.log(rep)
-  localStorage.setItem('token', rep.data)
-  loading.value = false
-  // 页面跳转
-  let href = window.location.href
-  let prefixHref = href.substring(0, href.length - 5)
-  window.location.href = prefixHref + 'chat'
+  if(rep.code === 200){
+      localStorage.setItem('token', rep.data)
+      // 页面跳转
+      let href = window.location.href
+      let prefixHref = href.substring(0, href.length - 5)
+      window.location.href = prefixHref + 'chat'
+    }
+  else{
+      ElNotification({
+        type: 'warning',
+        message: '不存在该账户或者密码输入错误',
+        title: '登录失败'
+    })
+    loading.value = false
+}
 }
 // 类似这样写一个注册的就好了 
 const Register = async () => {

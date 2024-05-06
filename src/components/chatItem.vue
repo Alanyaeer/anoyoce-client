@@ -18,7 +18,10 @@ const roomInfoItem = computed(() => props.roomInfo)
     <div class="container">
         <div style="display: flex; align-items: center; gap: 1vw;">
             <div>
-                <el-avatar :size="45" :src="roomInfoItem?.roomAvatar" />
+                <!-- <el-avatar :size="45" :src="roomInfoItem?.roomAvatar" /> -->
+                <a-avatar style="background-color: #00d0b6;">
+                    <span>{{roomInfoItem?.roomName}}</span>
+                </a-avatar>
             </div>
             <!-- <img src="" > -->
             <div style="display: flex; flex-direction: column; gap: 1vh;">
