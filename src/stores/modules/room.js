@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import {ref, watch, computed} from 'vue'
 import {queryRoomUserAdd, insertRoom, queryRoomUser,addRoom}  from '@/api/room'
 import { queryChatInfoList} from '@/api/chat'
+import { ElMessage } from "element-plus";
 export const useRoomStore = defineStore(
     'room-info',
     () => {
@@ -42,7 +43,9 @@ export const useRoomStore = defineStore(
             if(obj.code === 200){
                 roomList.value = obj.data
             }
-            await  updateTheRoomUserList()
+            if(roomList.value !== null && roomList.value.length !== 0){
+                await  updateTheRoomUserList()
+            }
         }
         /**
          * 这个是创建一个房间号
@@ -68,13 +71,20 @@ export const useRoomStore = defineStore(
         /**
          * 
          * @param {房间号的id} roomId 
+         * @param {房间号的信息} roomInfo
          */
-        const joinRoom = async (roomId) => {
+        const joinRoom = async (roomId, roomInfo = null) => {
             let request = {
                 "roomId": roomId
             }
             let rep =  await addRoom(request)
-            if(rep.code === 200)return rep.data
+            console.log(rep);
+            if(rep.code === 200){
+                console.log(roomInfo);
+                addRoomInView(roomInfo)
+                ElMessage.success("加入该房间号")
+                return rep.data
+            }
             else {
                 window.alert("你已经加入这个房间了")
             }
