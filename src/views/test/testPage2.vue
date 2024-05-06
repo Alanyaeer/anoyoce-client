@@ -6,7 +6,20 @@ const title = ref('登录');
 const titleN = ref(0);
 const form = ref({});
 const visibility = ref(true);
-
+const info = ref({
+    name: "张三",
+    id: "114514",
+    rename: "法外狂徒",
+    groupName:"法外狂徒",
+    signature: "I hope I will make you proud enough",
+    place: "提瓦特大陆",
+})
+const infoDetails = ref([
+  { label: '备注', content: info.value.rename },
+  { label: '群昵称', content: info.value.groupName },
+  { label: '签名', content: info.value.signature },
+  { label: '所在地', content: info.value.place }
+]);
 
 const stopPropagation = (event) => {
     event.stopPropagation();
@@ -15,231 +28,177 @@ const stopPropagation = (event) => {
 </script>
 <template>
     <div class="container"><!-- 底层居中 -->
-        <div class="wrapper"><!-- 整个登录注册面板 -->
-            <div class="aswitch">
-                <label class="switch">
-                    <input type="checkbox" class="toggle">
-                    <span class="slider"></span>
-                    <span class="card-side"></span>
-                        <div class="flip-card__inner" >
-                            <div class="flip-card__front">
-                                <div class="title">注册</div>
-                                <form class="flip-card__form" >
-                                    <label @click.stop>
-                                        <a-input :style="{width:'250px'}" v-model="form.userName" 
-                                        placeholder="请输入账号" allow-clear /></label>
-                                    <label @click.stop>
-                                        <a-input-password 
-                                        v-model:visibility="visibility" 
-                                        placeholder="请输入密码" :style="{width:'250px'}" 
-                                        v-model="form.password" :defaultVisibility="false" allow-clear/>
-                                    </label>
-                                    <label @click.stop>
-                                        <a-input-password v-model:visibility="visibility" 
-                                        placeholder="请再次输入密码" :style="{width:'250px'}" 
-                                        v-model="form.repassword" :defaultVisibility="false" allow-clear/>
-                                    </label>
-                                    <a-button type="primary">确定注册</a-button>
-                                </form>
-                                </div>
-                            <div class="flip-card__back">
-                                <div class="title">登录</div>
-                                <form class="flip-card__form" action="">
-                                <label @click.stop>
-                                    <a-input :style="{width:'250px'}" v-model="form.userName" 
-                                    placeholder="请输入账号" allow-clear /></label>
-                                <label @click.stop>
-                                    <a-input-password v-model:visibility="visibility" 
-                                    placeholder="请输入密码" :style="{width:'250px'}" 
-                                    v-model="form.password" :defaultVisibility="false" allow-clear/>
-                                </label>
-                                <a-button type="primary">确定登录</a-button>
-                                </form>
-                            </div>
+        <div class="card"><!-- 整个登录注册面板 -->
+                <div class="user-info">
+                    <div class="row">
+                        <div class="avatar"><img src="#" alt="用户头像"></div>
+                        <div class="name">
+                            {{info.name}}
+                            <div class="id">ID: {{info.id}}</div>
+                        </div>  
+                    </div>
+                    <!-- <div class="infoCss">
+                        <div>备注:{{info.rename}}</div>
+                        <div>群昵称:{{ info.groupName }} </div>
+                        <div>签名:{{ info.signature }} </div>
+                        <div>所在地: {{info.place}}</div>
+                    </div> -->
+                    <div class="details">
+                        <div v-for="detail in infoDetails" :key="detail.label">
+                            <span class="label">{{ detail.label }}:</span>
+                            <span class="content">{{ detail.content }}</span>
                         </div>
-                </label>
-            </div>   
+                    </div>
+                </div>
+                <span class="actions">
+                    <a-button>加好友</a-button>
+                </span>
+                <span>
+                    <a-button type="primary">发消息</a-button>
+                </span>
         </div>
     </div>
 </template>
 
 
 <style lang="scss" scoped>
-.container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    --s: 82px;
-    /* Add your background pattern here */
-    background: repeating-radial-gradient(circle, #fff, #fff 5px, #000 6px);
-    background-size: 50px 100px;
-        .wrapper {
-            --input-focus: #2d8cf0;
-            --font-color: #323232;
-            --font-color-sub: #666;
-            --bg-color: #fff;
-            --bg-color-alt: #666;
-            --main-color: #323232;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        /* switch card */
-        .switch {
-            transform: translateY(150px);
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            width: 50px;
-            height: 20px;
-            right: 50%;
-            bottom: 98%;
+
+// .container{
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     position: relative;
+//     width: 100vw;
+//     height: 100vh;
+//     // --s: 82px;
+//     // background: repeating-radial-gradient(circle, #fff, #f8f8f8 5px, #000 6px);
+//     background-size: 50px 100px;
+//     .card {
+//         width: 350px;
+//         height: 450px;
+//         border-radius: 30px;
+//         background: #e0e0e0;
+//         box-shadow: 15px 15px 30px #bebebe,-15px -15px 30px #ffffff;
+//         // display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         margin: auto;
+//         padding: 20px;
+//         position: relative;
+//         .user-info {
+//             position: relative;
+//             display: block;
+//             justify-content: center;
+//             align-items: center;
+//             margin-bottom: 20px;
+//             .row{
+//                 display: flex;
+//             }
+//             .avatar {
+//                 position: relative;
+//                 width: 80px;
+//                 height: 80px;
+//                 /* 如果你想要图片有边距 */
+//                 margin-right: 20px;
+//             }
+//             .infoCss{
+//                 position: relative;
+//                 justify-content: center;
+//                 align-items: center;
+//                 top: 150px;
+//             }
+//             .name{
+//                 font-size: 20px;
+//                 position: relative;
+//                 // display: flex;
+//                 justify-content: center;
+//                 align-items: center;
+//             }
+//             .id{
+//                 // position: relative;
+//                 // display: flex;
+//                 // justify-content: center;
+//                 // align-items: center;
+//                 font-size: 16px;
+//             }
+//             .actions{
+//                 display: flex;
+//                 justify-content: center;
+//                 align-items: center;
+//                 top:60px;
+//                 margin: 5px;
+//                 padding: 10px 20px;
+//             }
+//         }
+//     }
+// }
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: #f5f5f5;
+
+  .card {
+    width: 300px;
+    height: 300px;
+    border-radius: 10px;
+    background: #cde2e6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: left;
+    justify-content: space-between;
+    .user-info {
+      margin-bottom: 20px; // 为用户信息块添加外边距
+      .row {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        .avatar {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          margin-right: 28px;
         }
 
-        .card-side::before {
-            position: absolute;
-            content: '注册';
-            left: -70px;
-            top: 0;
-            width: 100px;
-            text-decoration: underline;
-            color: var(--font-color);
-            font-weight: 600;
-        }
+        .name {
+          font-size: 20px;
 
-        .card-side::after {
-            position: absolute;
-            content: '登录';
-            left: 70px;
-            top: 0;
-            width: 100px;
-            text-decoration: none;
-            color: var(--font-color);
-            font-weight: 600;
+          .id {
+            font-size: 16px;
+            color: #666;
+            margin-top: 5px; // 为ID添加上边距
+            }
         }
+      }
 
-        .toggle {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+      .details {
+          display: flex;
+          flex-direction: column;
+        div {
+          margin-bottom: 10px; // 为每一行信息添加下边距
 
-        .slider {
-            box-sizing: border-box;
-            border-radius: 5px;
-            border: 2px solid var(--main-color);
-            box-shadow: 4px 4px var(--main-color);
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-colorcolor);
-            transition: 0.3s;
-        }
-      
-        .slider:before {
-            box-sizing: border-box;
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            border: 2px solid var(--main-color);
-            border-radius: 5px;
-            left: -2px;
-            bottom: 2px;
-            background-color: var(--bg-color);
-            box-shadow: 0 3px 0 var(--main-color);
-            transition: 0.3s;
-        }
+          .label {
+              flex-shrink: 0; // 标签不缩小
+              margin-right: 20px;
+            }
 
-        .toggle:checked + .slider {
-            background-color: var(--input-focus);
+            .content {
+                text-align: right;
+              flex-grow: 1; // 内容占据剩余空间
+            }
         }
-      
-        .toggle:checked + .slider:before {
-            transform: translateX(30px);
-        }
-      
-        .toggle:checked ~ .card-side:before {
-            text-decoration: none;
-        }
-      
-        .toggle:checked ~ .card-side:after {
-            text-decoration: underline;
-        }
+      }
+    }
 
-    /* card */ 
-
-        .flip-card__inner {
-            position: relative;
-            background-color: transparent;
-            perspective: 1000px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
+    .actions {
+        a-button {
+            margin-right: 10px;
         }
-        
-        .toggle:checked ~ .flip-card__inner {
-            transform: rotateY(180deg);
-        }
-      
-        .toggle:checked ~ .flip-card__front {
-            box-shadow: none;
-        }
-      
-        .flip-card__front, .flip-card__back {
-            padding: 20px;
-            width: 300px;
-            height: 300px;
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            background: lightgrey;
-            gap: 20px;
-            border-radius: 5px;
-            border: 2px solid var(--main-color);
-            box-shadow: 4px 4px var(--main-color);
-        
-        }   
-
-        .flip-card__back {
-            width: 300px;
-            height: 300px;
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transform: rotateY(180deg);
-        }
-
-        .flip-card__form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-      
-        .title {
-            margin: 20px 0 20px 0;
-            font-size: 25px;
-            font-weight: 900;
-            text-align: center;
-            color: var(--main-color);
-        }
+    }
+  }
 }
 </style> 
