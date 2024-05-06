@@ -99,10 +99,6 @@ onMounted(async () => {
 <template>
     <div class="container">
         <el-dialog v-model="confirmDialogVisible" title="发起群聊" width="500" center>
-            <!-- <span>
-            It should be noted that the content will not be aligned in center by
-            default
-            </span> -->
             <el-form :model="form" label-width="auto" style="max-width: 600px">
                 <div class="form-row">
                     <img src="###" title="群聊头像" alt="群聊头像" class="avatar" />
@@ -121,14 +117,6 @@ onMounted(async () => {
                     <el-button @click="confirmDialogVisible = false">取消</el-button>
                 </el-form-item>
             </el-form>
-            <!-- <template #footer>
-            <div class="dialog-footer">
-                <el-button @click="confirmDialogVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="confirmDialogVisible = false">
-                Confirm
-                </el-button>
-            </div>
-            </template> -->
         </el-dialog>
         <div class="container-left">
             <functionTab></functionTab>
