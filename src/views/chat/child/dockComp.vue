@@ -8,6 +8,7 @@ import {picWithFunLoading} from '@/utils/loading'
 import { useRoomStore } from '@/stores'
 import {queryRoom} from '@/api/room'
 import { ElMessage } from 'element-plus';
+import { reactive } from 'vue'
 const roomStore = useRoomStore()
 const loading = ref(true)
 const searchRoomInfo = ref()
@@ -72,6 +73,20 @@ const showTheConfirmDialogFn = () => {
     // 让他显示出来
     confirmDialogVisible.value = true
 }
+const form = reactive({//创建群聊表单
+  name: '',
+  id: '',
+  desc: '',
+})
+const checkName = (name) =>{
+    if(!name.trim()){
+        alert("请输入群聊名称")
+    }
+    else{//表单消失
+        confirmDialogVisible.value = false
+    }
+}
+
 watch(() => searchContent.value,
     () => deb_searchContentFn(),
 )
@@ -85,19 +100,37 @@ onMounted(async () => {
 
 <template>
     <div class="container">
-        <el-dialog v-model="confirmDialogVisible" title="Warning" width="500" center>
-            <span>
+        <el-dialog v-model="confirmDialogVisible" title="发起群聊" width="500" center>
+            <!-- <span>
             It should be noted that the content will not be aligned in center by
             default
-            </span>
-            <template #footer>
+            </span> -->
+            <el-form :model="form" label-width="auto" style="max-width: 600px">
+                <div class="form-row">
+                    <img src="###" title="群聊头像" alt="群聊头像" class="avatar" />
+                    <el-form-item label="群聊名称" class="form-item">
+                        <el-input v-model="form.name" placeholder="请输入群聊名称" />
+                    </el-form-item>
+                </div>
+                <el-form-item label="群聊id">
+                    <el-input v-model="form.id" placeholder="用户可通过id加入群聊" disabled/>
+                </el-form-item>
+                <el-form-item label="群公告">
+                    <el-input v-model="form.desc" type="textarea" placeholder="初始化群公告"/>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="checkName(form.name)">创建</el-button>
+                    <el-button @click="confirmDialogVisible = false">取消</el-button>
+                </el-form-item>
+            </el-form>
+            <!-- <template #footer>
             <div class="dialog-footer">
                 <el-button @click="confirmDialogVisible = false">Cancel</el-button>
                 <el-button type="primary" @click="confirmDialogVisible = false">
                 Confirm
                 </el-button>
             </div>
-            </template>
+            </template> -->
         </el-dialog>
         <div class="container-left">
             <functionTab></functionTab>
@@ -191,5 +224,18 @@ onMounted(async () => {
                 }
             }
         }   
+        .form-row {
+            display: flex;
+            align-items: center;
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            margin-right: 50px;
+        }
+        .form-item {
+            display: flex;
+            flex: 1; /* 让输入框占据剩余空间 */
+        }
 }
 </style>
