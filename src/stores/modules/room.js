@@ -14,6 +14,30 @@ export const useRoomStore = defineStore(
         const chatInfoList = ref([])
         const loading = ref(false)
         const chatLoading = ref(false)
+        const chatWindow = ref(null)
+        // 传入一个div
+        const setChatWindow = (div) => {
+            chatWindow.value = div
+        }
+        const scrollToBottom = () => {
+            const scrollDom = chatWindow.value
+            if(scrollDom === null || scrollDom === undefined) return;
+            scrollDom.scrollTop = scrollDom.scrollHeight
+        }
+        const personLogin = (userId) => {
+            for(let i = 0; i < roomUserList.value.length; ++i){
+                if(roomUserList.value[i].id  === userId){
+                    roomUserList.value[i].online = 1
+                }
+            }
+        }
+        const personLogout = (userId) => {
+            for(let i = 0; i < roomUserList.value.length; ++i){
+                if(roomUserList.value[i].id === userId){
+                    roomUserList.value[i].online = 0;
+                }
+            }
+        }
         // 管理一个根据 在线状态进行排序的 friendList
         const sortedFriendList =  computed(() => {
             return roomUserList.value.sort((a, b) => {
@@ -125,6 +149,7 @@ export const useRoomStore = defineStore(
                 else{
                     window.alert("请求失败")
                 }
+
             }   
             else {
                 window.alert("请求失败")
@@ -134,6 +159,10 @@ export const useRoomStore = defineStore(
             }, 1000);
             setTimeout(() => {
                 chatLoading.value = false
+                setTimeout(() => {
+                    const scrollDom =  chatWindow.value 
+                    scrollDom.scrollTop = scrollDom.scrollHeight
+                })
             }, 500)
         }
         const addMsgInChatInfoList = (msg) => {
@@ -142,6 +171,6 @@ export const useRoomStore = defineStore(
         watch(() => currentRoomIndex.value, 
                 () => updateTheRoomUserList(),
             )
-        return {setCurrentRoomIndex,addMsgInChatInfoList, getCurrentRoomIndex , currentRoomIndex, currentRoomId,roomId, addRoomInView ,joinRoom, reloadRoomList, createRoom, getRoomList, roomList,  roomUserList,chatLoading, loading, chatInfoList, sortedFriendList}
+        return {setCurrentRoomIndex,setChatWindow,scrollToBottom, personLogin , personLogout  ,addMsgInChatInfoList, getCurrentRoomIndex , currentRoomIndex, currentRoomId,roomId, addRoomInView ,joinRoom, reloadRoomList, createRoom, getRoomList, roomList,  roomUserList,chatLoading, loading, chatInfoList, sortedFriendList}
     }
 )

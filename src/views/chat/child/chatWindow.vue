@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted, computed} from 'vue'
+import {ref, onMounted, computed, watch} from 'vue'
 import TvError from '@/components/TvError.vue';
 import friendListTable from '@/views/chat/child/friendListTable.vue'
 import chatLoader from '@/components/chatLoader.vue';
@@ -9,15 +9,28 @@ const roomStore = useRoomStore()
 const userInfoStore = useUserInfoStore()
 const roomType = ref(1)
 const chatList = computed(() => roomStore.chatInfoList)
+const chatWindow = ref(null)
 const myUserInfo = computed(() => userInfoStore.userInfo.id)
 const loading = computed(() => roomStore.chatLoading)
+// 当加载了chatWindow 出来之后 
+const innerRoom = () => {
+    console.log(chatWindow.value)
+    if(chatWindow.value !== null) 
+    roomStore.setChatWindow(chatWindow.value)
+    const scrollDom = chatWindow.value
+    scrollDom.scrollTop = scrollDom.scrollHeight
+}
+watch(() => chatWindow.value,
+    () => innerRoom()
+)
 onMounted(() => {
+
 })
 </script>
 
 <template>
     <div class="container">
-        <div class="leftWindow">
+        <div class="leftWindow" ref="chatWindow">
             <el-skeleton style="position: relative; height: 100%;" :loading="loading" animated>
                 <template #template>
                     <div style="display: flex; position: relative; top: 45%; left: 50%; translate: 0% -50%">
@@ -25,7 +38,7 @@ onMounted(() => {
                     </div>
                 </template>
                 <template #default>
-                    <div v-for="(item, index) in chatList" :key="item">
+                    <div v-for="(item, index) in chatList" :key="item" >
                         <div v-if="item?.self === 1" class="chatme">
                             <div class="chat-text">
                                 {{ item?.message }}

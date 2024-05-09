@@ -19,7 +19,8 @@ const userSocketInit = () => {
     socket = new WebSocket(socketUrl, [token])
     socket.onopen = function () {
         console.log("websocket已打开");
-
+        console.log(socket)
+        userInfoStore.changeUserOnlineStatus(1)
     };
     /**
      * 这是消息的发送
@@ -41,12 +42,23 @@ const userSocketInit = () => {
       }
       let data = JSON.parse(msg.data)  // 对收到的json数据进行解析， 类似这样的： {"users": [{"username": "zhang"},{ "username": "admin"}]}
       console.log(data)
-      roomStore.addMsgInChatInfoList(data.message)
+      if(data.type === "chat"){
+        roomStore.addMsgInChatInfoList(data.message)
+      }
+      else if(data.type === 'login'){
+        // roomStore.addRoomInView(data.userId);
+        roomStore.personLogin(data.userId)
+      }
+      else if(data.type === 'logout') roomStore.personLogout(data.userId)
+
     }
     socket.onclose = (e)=> {
       console.log('websocket关闭', e.code+ ' '+e.reason+' ' + e.wasClean)
       // 切换用户状态
       userInfoStore.changeUserOnlineStatus(0);
+      setTimeout(() => {
+        socket.onopen()
+      }, 60000)
       // eslint-disable-next-line no-undef
       ElMessage('websocket关闭')
     }
