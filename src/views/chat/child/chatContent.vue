@@ -1,7 +1,7 @@
 <script setup>
 import {ref, watch, onMounted, computed} from 'vue'
 import {insertAddChatInfo} from '@/api/chat'
-import {useRoomStore} from '@/stores'
+import {useRoomStore, useUserInfoStore} from '@/stores'
 import {formatDate} from '@/utils/dayUtils'
 import { ElMessage } from 'element-plus';
 const sendLoading = ref(false)
@@ -9,6 +9,7 @@ const sendContent = ref('')
 const sendDisabled = ref(true)
 const token = localStorage.getItem("token")
 const roomStore = useRoomStore()
+const userInfoStore = useUserInfoStore()
 const currentRoomId = computed(() => roomStore?.roomId)
 let socket;
 const sendSocket = (message)=>{
@@ -30,9 +31,12 @@ const handleClick = async() =>{
         "message": sendContent.value,
         "anonymous": 0,
         "messageExtension": null,
-        "createTime": formatDate(new Date())
     }   
-    sendSocket(requestBody)
+    let requestBodyWithTime = {
+        ...requestBody,
+        "createTime": formatDate(new Date())
+    }
+    sendSocket(requestBodyWithTime)
     // 插入消息记录
     await insertAddChatInfo(requestParams, requestBody)
     roomStore
