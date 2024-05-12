@@ -2,14 +2,18 @@
 import {ref, onMounted, computed, watch} from 'vue'
 import TvError from '@/components/TvError.vue';
 import friendListTable from '@/views/chat/child/friendListTable.vue'
+import messageCard from '@/views/chat/child/messageCard.vue'
 import chatLoader from '@/components/chatLoader.vue';
 import {useRoomStore, useUserInfoStore} from '@/stores'
 import {formatDate} from '@/utils/dayUtils'
+import {saveScoreInfo} from '@/api/chat'
 const roomStore = useRoomStore()
 const userInfoStore = useUserInfoStore()
 const roomType = ref(1)
+const score = computed(() => roomStore.score)
 const chatList = computed(() => roomStore.chatInfoList)
 const chatWindow = ref(null)
+const currentScore =ref(0)
 const myUserInfo = computed(() => userInfoStore.userInfo.id)
 const loading = computed(() => roomStore.chatLoading)
 // 当加载了chatWindow 出来之后 
@@ -20,11 +24,31 @@ const innerRoom = () => {
     const scrollDom = chatWindow.value
     scrollDom.scrollTop = scrollDom.scrollHeight
 }
+const scoreUser = async () => {
+    const messageInfo =  roomStore.currentCardInfo
+    if(messageInfo === undefined){
+        ElMessage.error("还没有需要你评价的时刻")
+    }
+    console.log(messageInfo)
+    let params = {
+        roomId: roomStore.roomId,
+        userId: messageInfo.choseFriend,
+        score: currentScore.value
+    }
+    let rep =  await saveScoreInfo(params)
+    console.log(rep)
+    if(rep.code === 200 && rep.data === 1){
+        ElMessage.success("评分成功")
+        roomStore.updateScore(currentScore.value)
+    }
+    else {
+        ElMessage.warning('你不需要评价多次')
+    }
+}
 watch(() => chatWindow.value,
     () => innerRoom()
 )
 onMounted(() => {
-
 })
 </script>
 
@@ -40,8 +64,11 @@ onMounted(() => {
                 <template #default>
                     <div v-for="(item, index) in chatList" :key="item" >
                         <div v-if="item?.self === 1" class="chatme">
-                            <div class="chat-text">
+                            <div v-if="item?.messageType === 0" class="chat-text">
                                 {{ item?.message }}
+                            </div>
+                            <div v-if="item?.messageType === 1">
+                                <messageCard :messageInfo="item"></messageCard>
                             </div>
                             <div class="info-time ">
                                 <span style="position: relative; right: 12px;">{{ formatDate(item?.createTime) }}</span>
@@ -95,7 +122,11 @@ onMounted(() => {
         </div>
         <div class="rightCard">
             <div class="rightTop" v-if="roomType===1">
-                <TvError></TvError>
+                <a-card style="position:relative; width: 100%; border-radius: 15px;"  title="请为用户打分">
+                    <a-space style="display: flex; justify-content: center;">
+                        <a-rate  @click="scoreUser()"  v-model="currentScore" :count="8"/>
+                    </a-space>
+                </a-card>
             </div>
 
             <div class="rightBottom">
@@ -209,6 +240,7 @@ onMounted(() => {
             display: flex;
             height: 25vh;
             border-radius: 5px;
+            padding: 3px 10px;
         }
         .rightBottom{
             margin-top: 20px;

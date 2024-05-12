@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import {ref, watch, computed} from 'vue'
 import {queryRoomUserAdd, insertRoom, queryRoomUser,addRoom}  from '@/api/room'
-import { queryChatInfoList} from '@/api/chat'
+import { queryChatInfoList, queryScoreInfo} from '@/api/chat'
 import { ElMessage } from "element-plus";
 export const useRoomStore = defineStore(
     'room-info',
@@ -15,6 +15,8 @@ export const useRoomStore = defineStore(
         const loading = ref(false)
         const chatLoading = ref(false)
         const chatWindow = ref(null)
+        const currentCardInfo = ref()
+        const score = ref(0)
         // 传入一个div
         const setChatWindow = (div) => {
             chatWindow.value = div
@@ -126,6 +128,23 @@ export const useRoomStore = defineStore(
         const getRoomList = () => {
             return roomList;
         }
+        const updateCurrentCardInfo = (msg) => {
+            console.log(msg)
+            if(msg?.messageType === 1){
+                let now =  new Date()
+                let start = new Date(msg?.messageCard.startTime)
+                let end = new Date(msg?.messageCard.endTime)
+                console.log(start <= now)
+                console.log(now <= end)
+                if(start <= now && now <= end){
+                    console.log('success')
+                    currentCardInfo.value = msg.messageCard;
+                }
+            }
+        }
+        const setCurrentCardInfo = (message) => {
+            updateCurrentCardInfo(message.messageCard)
+        }
         /**
          * 更新房间号
          */
@@ -145,6 +164,13 @@ export const useRoomStore = defineStore(
                 let chatRepList = await  queryChatInfoList(requestParams)
                 if(chatRepList.code === 200){
                     chatInfoList.value = chatRepList.data
+                    var tempList = chatRepList.data
+                    // 查询 最近的以此记录
+                    for(var i = 0; i < tempList.length; ++i){
+                        updateCurrentCardInfo(tempList[i])
+                    }
+                    await queryCurrentScore()
+
                 }
                 else{
                     window.alert("请求失败")
@@ -167,10 +193,28 @@ export const useRoomStore = defineStore(
         }
         const addMsgInChatInfoList = (msg) => {
             chatInfoList.value.push(msg) 
+            updateCurrentCardInfo(msg.messageCard)
         }   
+        const queryCurrentScore = async () => {
+            if(currentCardInfo.value === undefined) return ;
+            console.log(currentCardInfo.value)
+            let request = {
+                roomId: roomId.value, 
+                userId: currentCardInfo.value.choseFriend
+            }
+            console.log(request)
+            let rep =  await  queryScoreInfo(request)
+            if(rep.code === 200){
+                score.value = rep.data.score
+            }
+            return score.value
+        }
+        const updateScore = (score) => {
+            score.value = score
+        }
         watch(() => currentRoomIndex.value, 
                 () => updateTheRoomUserList(),
             )
-        return {setCurrentRoomIndex,setChatWindow,scrollToBottom, personLogin , personLogout  ,addMsgInChatInfoList, getCurrentRoomIndex , currentRoomIndex, currentRoomId,roomId, addRoomInView ,joinRoom, reloadRoomList, createRoom, getRoomList, roomList,  roomUserList,chatLoading, loading, chatInfoList, sortedFriendList}
+        return {setCurrentRoomIndex,updateScore,queryCurrentScore, score, setChatWindow,scrollToBottom,setCurrentCardInfo, personLogin , personLogout  ,addMsgInChatInfoList, getCurrentRoomIndex , currentRoomIndex, currentRoomId,roomId, addRoomInView ,joinRoom, reloadRoomList, createRoom, getRoomList, roomList,  roomUserList,chatLoading, loading, chatInfoList, sortedFriendList,currentCardInfo}
     }
 )

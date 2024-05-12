@@ -23,3 +23,17 @@ export const insertAddChatInfo = (params, requestBody) => {
         data: requestBody
     })
 }
+export const saveScoreInfo = (params) => {
+    return axios({
+        method: 'put',
+        baseURL: `${baseUrl}/api/chat/save/score`,
+        data: params
+    })
+}
+export const queryScoreInfo = (params) => {
+    return axios({
+        method: 'get',
+        baseURL: `${baseUrl}/api/chat/query/score`,
+        params: params
+    })
+}

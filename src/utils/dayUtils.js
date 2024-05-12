@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 如果需要中文显示，可以引入相应的语言包
 
-export function formatDate(date, format = 'YYYY-MM-DD HH:mm' ) {
+export function formatDate(date, format = 'YYYY-MM-DD HH:mm:ss' ) {
   return dayjs(date).format(format);
 }
 
@@ -27,3 +27,25 @@ export function getDistanceTime(startTime, endTime){
     return parseInt(getHours) +" 小时 " + parseInt(getMins) + " 分钟 ";
   else return parseInt(getHours) +" 小时 " + parseInt(getMins) + " 分钟 " + parseInt(getSecs) + " 秒 ";
 }
+
+export function FormatTime(t,date){
+  var date=new Date(date);
+  var o = {   
+      "M+" : date.getMonth()+1,                 //月份
+      "d+" : date.getDate(),                    //日
+      "h+" : date.getHours(),                   //小时
+      "m+" : date.getMinutes(),                 //分
+      "s+" : date.getSeconds(),                 //秒
+      "q+" : Math.floor((date.getMonth()+3)/3), //季度
+      "S"  : date.getMilliseconds()             //毫秒
+  };   
+  if(/(y+)/.test(t)){
+      t=t.replace(RegExp.$1,(date.getFullYear()+"").substr(4-RegExp.$1.length)); 
+  };    
+  for(var k in o){
+      if(new RegExp("("+ k +")").test(t)){
+          t=t.replace(RegExp.$1,(RegExp.$1.length==1)?(o[k]):(("00"+ o[k]).substr((""+o[k]).length))); 
+      }; 
+  }
+  return t; 
+};

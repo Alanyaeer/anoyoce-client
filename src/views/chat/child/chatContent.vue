@@ -2,20 +2,22 @@
 import {ref, watch, onMounted, computed} from 'vue'
 import {insertAddChatInfo} from '@/api/chat'
 import {useRoomStore} from '@/stores'
-import {formatDate} from '@/utils/dayUtils'
+import {formatDate, FormatTime} from '@/utils/dayUtils'
 import { ElMessage } from 'element-plus';
 const sendLoading = ref(false)
 const sendContent = ref('')
 const sendDisabled = ref(true)
 const token = localStorage.getItem("token")
 const roomStore = useRoomStore()
-const windowShow = ref(true);
+const windowShow = ref(false);
 
 const friendList = computed(()=> roomStore.roomUserList)
 // const userInfoStore = useUserInfoStore()
 const form = ref({
     subject: '任务标题',
     content: '请给用户评价',
+    choseFriend: '',
+    timegap: []
 })
 const currentRoomId = computed(() => roomStore?.roomId)
 let socket;
@@ -27,7 +29,7 @@ const sendSocket = (message)=>{
     }
     socket.send(JSON.stringify(packMsg))
 }   
-const handleClick = async() =>{
+const handleClick = async(type) =>{
     sendLoading.value = true;
     let requestParams = {
         "roomId": currentRoomId.value
@@ -39,6 +41,20 @@ const handleClick = async() =>{
         "anonymous": 0,
         "messageExtension": null,
     }   
+    if(type === 1){
+        // 参数检查
+        if(form.value.choseFriend === ''){
+            
+            ElMessage.info("你必须填入用户的Id")
+            return ;
+        }
+        form.value.startTime = FormatTime('yyyy-MM-dd hh:mm:ss' ,form.value.timegap[0]) 
+        form.value.endTime = FormatTime('yyyy-MM-dd hh:mm:ss' ,form.value.timegap[1])
+        windowShow.value = false
+        requestBody.messageExtension = JSON.stringify(form.value)
+        requestBody.messageType = 1
+        console.log(requestBody)
+    }
     let requestBodyWithTime = {
         ...requestBody,
         "createTime": formatDate(new Date())
@@ -100,9 +116,6 @@ const initRoomSocket = () => {
         ElMessage.error('websocket发送错误')
     }
 }
-const sendTask = () => {
-    console.log('faef')
-}
 const showTaskWindow = () => {
     windowShow.value = true;
 }
@@ -139,7 +152,6 @@ onMounted(() => {
                         start-placeholder="开始时间"
                         end-placeholder="结束时间"
                         format="YYYY-MM-DD HH:mm:ss"
-                        date-format="YYYY/MM/DD ddd"
                         time-format="A hh:mm:ss"
                     />
                 </div>
@@ -152,7 +164,7 @@ onMounted(() => {
                     <a-textarea placeholder="请输入主题内容" v-model="form.content" allow-clear/>
                 </div>
                 <div style="display: flex; position: relative; width: 100%; justify-self: flex-start; gap: 10px;">
-                    <a-button @click="handleClick()" type="primary">确认</a-button>
+                    <a-button @click="handleClick(1)" type="primary">确认</a-button>
                     <a-button @click="windowShow = false" type="dashed">取消</a-button>
 
                 </div>
