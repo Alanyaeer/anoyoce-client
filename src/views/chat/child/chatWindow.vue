@@ -13,9 +13,10 @@ const roomType = ref(1)
 const score = computed(() => roomStore.score)
 const chatList = computed(() => roomStore.chatInfoList)
 const chatWindow = ref(null)
-const currentScore =ref(0)
 const myUserInfo = computed(() => userInfoStore.userInfo.id)
 const loading = computed(() => roomStore.chatLoading)
+const haveScore = computed(() => roomStore.haveScore)
+const canScore = computed(() => roomStore.canScore)
 // 当加载了chatWindow 出来之后 
 const innerRoom = () => {
     console.log(chatWindow.value)
@@ -24,31 +25,17 @@ const innerRoom = () => {
     const scrollDom = chatWindow.value
     scrollDom.scrollTop = scrollDom.scrollHeight
 }
-const scoreUser = async () => {
-    const messageInfo =  roomStore.currentCardInfo
-    if(messageInfo === undefined){
-        ElMessage.error("还没有需要你评价的时刻")
-    }
-    console.log(messageInfo)
-    let params = {
-        roomId: roomStore.roomId,
-        userId: messageInfo.choseFriend,
-        score: currentScore.value
-    }
-    let rep =  await saveScoreInfo(params)
-    console.log(rep)
-    if(rep.code === 200 && rep.data === 1){
-        ElMessage.success("评分成功")
-        roomStore.updateScore(currentScore.value)
-    }
-    else {
-        ElMessage.warning('你不需要评价多次')
-    }
+// 不一样 
+// 修改 = 》 成功 
+
+const scoreUser = async (currentScore) => {
+    await roomStore.updateCurrentScore(currentScore)
 }
 watch(() => chatWindow.value,
     () => innerRoom()
 )
 onMounted(() => {
+    
 })
 </script>
 
@@ -122,9 +109,23 @@ onMounted(() => {
         </div>
         <div class="rightCard">
             <div class="rightTop" v-if="roomType===1">
-                <a-card style="position:relative; width: 100%; border-radius: 15px;"  title="请为用户打分">
+                <a-card style="position:relative; width: 100%; border-radius: 15px;"  :title="canScore === 1 ? '请为用户评分': '暂时不需要进行评分'">
+                    <template #extra>
+                        <div v-if="canScore === 1">
+                            <el-tooltip v-if="haveScore === 1" content="已完成评分" placement="top" effect="light">
+                                <svg style="color: #35C254; position: relative; " xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill:none viewBox="0 0 14 14" width="20" height="20"><path stroke-linecap="round" fill="none" stroke-linejoin="round" stroke-width="1.2" d="M12.598 7a5.6 5.6 0 11-3.15-5.037m2.1 1.537l-4.9 4.9-1.4-1.4"></path></svg>
+                            </el-tooltip>
+                            <el-tooltip v-else content="未完成评分" placement="top" effect="light">
+                                <!-- <svg style="color: #35C254; position: relative; left: -20px;" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill:none viewBox="0 0 14 14" width="20" height="20"><path stroke-linecap="round" fill="none" stroke-linejoin="round" stroke-width="1.2" d="M12.598 7a5.6 5.6 0 11-3.15-5.037m2.1 1.537l-4.9 4.9-1.4-1.4"></path></svg> -->
+                                <svg style="color: #FFB800; position: relative; " xmlns="http://www.w3.org/2000/svg" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20" fill=none class="h-4.5 w-4.5 text-lc-yellow-60 dark:text-dark-lc-yellow-60 inline-block shrink-0 fill-none stroke-current"><path stroke-width="2" d="M18 12a6.002 6.002 0 01-5.004 5.918c-.545.09-.996-.366-.996-.918V7c0-.552.451-1.009.996-.918A6.002 6.002 0 0118 12z"></path><path stroke-width="2" d="M21.6 12a9.6 9.6 0 01-9.6 9.6 9.6 9.6 0 119.6-9.6z" clip-rule="evenodd"></path></svg>
+                            </el-tooltip>
+                        </div>
+                    </template>
                     <a-space style="display: flex; justify-content: center;">
-                        <a-rate  @click="scoreUser()"  v-model="currentScore" :count="8"/>
+                        <a-rate v-if="canScore===1"  @change="scoreUser" v-model="score"  :count="8"/>
+                        <div v-else>
+                            <img style="width: 80px; height: 80px;" src="@/assets/img/empty.png" />
+                        </div>
                     </a-space>
                 </a-card>
             </div>

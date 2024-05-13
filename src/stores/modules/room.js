@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import {ref, watch, computed} from 'vue'
 import {queryRoomUserAdd, insertRoom, queryRoomUser,addRoom}  from '@/api/room'
-import { queryChatInfoList, queryScoreInfo} from '@/api/chat'
+import { queryChatInfoList, queryScoreInfo, saveScoreInfo} from '@/api/chat'
 import { ElMessage } from "element-plus";
 export const useRoomStore = defineStore(
     'room-info',
@@ -17,6 +17,9 @@ export const useRoomStore = defineStore(
         const chatWindow = ref(null)
         const currentCardInfo = ref()
         const score = ref(0)
+        // 0 表示没有评分过， 1 表示评分过
+        const haveScore = ref(0)
+        const canScore = ref(0)
         // 传入一个div
         const setChatWindow = (div) => {
             chatWindow.value = div
@@ -139,11 +142,18 @@ export const useRoomStore = defineStore(
                 if(start <= now && now <= end){
                     console.log('success')
                     currentCardInfo.value = msg.messageCard;
+                    score.value = 0
+                    haveScore.value = 0
                 }
             }
         }
         const setCurrentCardInfo = (message) => {
             updateCurrentCardInfo(message.messageCard)
+        }
+        const postclean = () => {
+            currentCardInfo.value = undefined
+            score.value = 0,
+            haveScore.value = 0
         }
         /**
          * 更新房间号
@@ -151,6 +161,8 @@ export const useRoomStore = defineStore(
         const updateTheRoomUserList = async () => {
             loading.value = true
             chatLoading.value = true
+            // 置空
+            postclean();
             let currentRoomId = roomList.value[currentRoomIndex.value].id
             let params = {
                 roomId: currentRoomId
@@ -193,7 +205,7 @@ export const useRoomStore = defineStore(
         }
         const addMsgInChatInfoList = (msg) => {
             chatInfoList.value.push(msg) 
-            updateCurrentCardInfo(msg.messageCard)
+            updateCurrentCardInfo(msg)
         }   
         const queryCurrentScore = async () => {
             if(currentCardInfo.value === undefined) return ;
@@ -205,16 +217,47 @@ export const useRoomStore = defineStore(
             console.log(request)
             let rep =  await  queryScoreInfo(request)
             if(rep.code === 200){
-                score.value = rep.data.score
+                if(rep.data.score !== -1){
+                    score.value = rep.data.score
+                    haveScore.value = 1;
+                }
+                else{
+                    haveScore.value = 0;
+                }
             }
             return score.value
         }
-        const updateScore = (score) => {
-            score.value = score
+        const updateCurrentScore = async (currentScore) => {
+            const messageInfo =  currentCardInfo.value
+            if(messageInfo === undefined){
+                ElMessage.error("还没有需要你评价的时刻")
+            }
+            console.log(messageInfo)
+            let params = {
+                roomId: roomId.value,
+                userId: messageInfo.choseFriend,
+                score: currentScore
+            }
+            let rep =  await saveScoreInfo(params)
+            if(rep.code === 200 && rep.data === 1){
+                ElMessage.success("评分成功")
+                score.value = currentScore;
+                haveScore.value = 1
+            }
+            else {
+                ElMessage.warning("你不需要重复评价")
+            }
+        }
+        const canScoreFn = () => {
+            if(currentCardInfo.value === undefined) canScore.value = 0;
+            else canScore.value = 1;
         }
         watch(() => currentRoomIndex.value, 
                 () => updateTheRoomUserList(),
             )
-        return {setCurrentRoomIndex,updateScore,queryCurrentScore, score, setChatWindow,scrollToBottom,setCurrentCardInfo, personLogin , personLogout  ,addMsgInChatInfoList, getCurrentRoomIndex , currentRoomIndex, currentRoomId,roomId, addRoomInView ,joinRoom, reloadRoomList, createRoom, getRoomList, roomList,  roomUserList,chatLoading, loading, chatInfoList, sortedFriendList,currentCardInfo}
+        watch(() => currentCardInfo.value,
+                ()=> canScoreFn(),
+            )
+        return {setCurrentRoomIndex,queryCurrentScore,canScore, haveScore,updateCurrentScore, score, setChatWindow,scrollToBottom,setCurrentCardInfo, personLogin , personLogout  ,addMsgInChatInfoList, getCurrentRoomIndex , currentRoomIndex, currentRoomId,roomId, addRoomInView ,joinRoom, reloadRoomList, createRoom, getRoomList, roomList,  roomUserList,chatLoading, loading, chatInfoList, sortedFriendList,currentCardInfo}
     }
 )
