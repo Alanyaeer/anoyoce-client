@@ -77,8 +77,11 @@ onMounted(() => {
                             </div>
                         </div>
                         <div v-else class="chatfriend">
-                            <div class="chat-text">
+                            <div v-if="item?.messageType === 0" class="chat-text">
                                 {{ item?.message }}
+                            </div>
+                            <div v-if="item?.messageType === 1">
+                                <messageCard :messageInfo="item"></messageCard>
                             </div>
                             <div class="info-time">
                                 <el-popover

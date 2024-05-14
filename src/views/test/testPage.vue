@@ -11,7 +11,7 @@ onMounted(() => {
 
 <template>
   <div class="container"><!-- 底层居中 -->  
-    <a-rate @change="fn" v-model="value" :count="10"/>
+
   </div>
 </template>
 

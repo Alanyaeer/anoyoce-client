@@ -1,11 +1,16 @@
 <script setup>
-import {ref, defineProps, computed} from 'vue'
+import {ref, onMounted, defineProps, computed} from 'vue'
+import {calSecTime} from '@/utils/dayUtils'
+const now = Date.now()
 const props = defineProps({
     messageInfo: {
         type: Object,
     }
 })
 const messageInfo = computed(()=> props.messageInfo)
+onMounted(() => {
+    console.log(now)
+})
 </script>
 
 <template>
@@ -31,17 +36,17 @@ const messageInfo = computed(()=> props.messageInfo)
         </template>
         <a-card-meta :title="messageInfo?.messageCard?.subject">
             <template #description>
-                <div style="margin-top:10px; display: flex; flex-direction: column; gap: 10px;">
-                    <div style="color: #9C9C9C; font-size:small;">
-                        <span>{{ messageInfo?.messageCard?.content }}</span>
+                <div style="margin-top:10px; display: flex;  gap: 10px; justify-content: space-between;">
+                    <div style="color: #9C9C9C; font-size:medium;">
+                        <a-typography-paragraph blockquote>
+
+                            {{ messageInfo?.messageCard?.content }}
+                        </a-typography-paragraph>
                     </div> 
-                    <a-progress
-                    :percent="0.8"
-                    :style="{ width: '100%' }"
-                    :color="{
-                        '0%': 'rgb(61, 85, 191)', /* 深蓝色 */
-                        '100%': 'rgb(170, 98, 229)', /* 紫色 */
-                    }"
+                    <a-countdown
+                        title="倒计时"
+                        :value="calSecTime(messageInfo?.messageCard?.endTime)"
+                        :now="now"
                     />
                 </div>
             </template>

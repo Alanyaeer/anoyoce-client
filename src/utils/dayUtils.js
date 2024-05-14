@@ -49,3 +49,18 @@ export function FormatTime(t,date){
   }
   return t; 
 };
+/**
+ * 
+ * @param {开始的时间} startTime 
+ * @param {结束时间} endTime 
+ */
+export function calProgress(startTime, endTime) {
+  var nowDate = new Date()
+  var startDate = new Date(startTime)
+  var endDate = new Date(endTime)
+  return (nowDate.getTime() - startDate.getTime()) / (endDate.getTime() - startDate.getTime())
+}
+export function calSecTime(time){
+  var timeDate = new Date(time)
+  return timeDate
+}
