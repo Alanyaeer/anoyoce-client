@@ -10,14 +10,15 @@ const sendDisabled = ref(true)
 const token = localStorage.getItem("token")
 const roomStore = useRoomStore()
 const windowShow = ref(false);
-
+const timesList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 const friendList = computed(()=> roomStore.roomUserList)
 // const userInfoStore = useUserInfoStore()
 const form = ref({
     subject: '任务标题',
     content: '请给用户评价',
     choseFriend: '',
-    timegap: []
+    timegap: [],
+    times: 1
 })
 const currentRoomId = computed(() => roomStore?.roomId)
 let socket;
@@ -25,11 +26,16 @@ const sendSocket = (message)=>{
     let packMsg = {
         "message":message,
         "type": "chat",
-        "token": token
+        "token": token,
     }
     socket.send(JSON.stringify(packMsg))
 }   
 const handleClick = async(type) =>{
+    
+    if(type === -1){
+        windowShow.value = false
+        return ;
+    }
     sendLoading.value = true;
     let requestParams = {
         "roomId": currentRoomId.value
@@ -66,6 +72,12 @@ const handleClick = async(type) =>{
     //清空
     sendContent.value = ""
     sendLoading.value = false
+    form.value = {
+        subject: '任务标题',
+        content: '请给用户评价',
+        choseFriend: '',
+        timegap: []
+    }
 }
 const changeSendStatus = () =>{
     if(sendContent.value.length > 0) sendDisabled.value = false;
@@ -143,6 +155,17 @@ onMounted(() => {
                             :value="item.id"
                         />
                     </el-select>
+                    <div style="margin-left: 10px; white-space: nowrap; word-break: keep-all;">第几次：</div>
+                    <el-select v-model="form.times" placeholder="次数" style="width: 80px;">
+                        <el-option
+                            v-for="item in timesList"
+                            :key="item"
+                            :label="item"
+                            :value="item"
+                        >
+
+                        </el-option>
+                    </el-select>
                 </div>
                 <div style="display: flex; align-items: center;">
                     <div style="white-space:nowrap;word-break:keep-all; width: 70px;">时间挑选：</div>
@@ -165,7 +188,7 @@ onMounted(() => {
                 </div>
                 <div style="display: flex; position: relative; width: 100%; justify-self: flex-start; gap: 10px;">
                     <a-button @click="handleClick(1)" type="primary">确认</a-button>
-                    <a-button @click="windowShow = false" type="dashed">取消</a-button>
+                    <a-button @click="handleClick(-1)" type="dashed">取消</a-button>
 
                 </div>
             </el-form>

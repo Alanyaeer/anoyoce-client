@@ -181,6 +181,7 @@ export const useRoomStore = defineStore(
                     for(var i = 0; i < tempList.length; ++i){
                         updateCurrentCardInfo(tempList[i])
                     }
+                    roomId.value = currentRoomId
                     await queryCurrentScore()
 
                 }
@@ -212,7 +213,8 @@ export const useRoomStore = defineStore(
             console.log(currentCardInfo.value)
             let request = {
                 roomId: roomId.value, 
-                userId: currentCardInfo.value.choseFriend
+                userId: currentCardInfo.value.choseFriend,
+                times: currentCardInfo.value.times
             }
             console.log(request)
             let rep =  await  queryScoreInfo(request)
@@ -236,6 +238,7 @@ export const useRoomStore = defineStore(
             let params = {
                 roomId: roomId.value,
                 userId: messageInfo.choseFriend,
+                times: messageInfo.times,   
                 score: currentScore
             }
             let rep =  await saveScoreInfo(params)
