@@ -21,5 +21,14 @@ const router = createRouter({
     }
   ]
 })
-
+router.beforeEach((to, from, next) =>{
+  let token = localStorage.getItem("token")
+  if(to.path === '/'){
+    if(!token){
+      next({path: 'login'})
+    }
+    else next({path: 'chat'})
+  }
+  next();
+})
 export default router
